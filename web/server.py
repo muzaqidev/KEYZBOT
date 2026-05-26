@@ -476,6 +476,11 @@ def on_user_message(data):
     chat = user["chats"][user["active_chat"]]
     bot = chat["agent"]
 
+    # Check API key
+    if not bot.cfg.get("api_key"):
+        emit("chat_error", {"error": "No API key configured. Open Settings (⚙) and add your API key for the active provider.", "chat_id": user["active_chat"]})
+        return
+
     # Auto-name chat from first message
     if chat["messages_count"] == 0 and not text.startswith("/"):
         chat["name"] = text[:40] + ("..." if len(text) > 40 else "")

@@ -58,7 +58,7 @@ Always use absolute paths for reliability. Never assume you're restricted to any
 DEFAULTS = {
     "base_url": "https://opengateway.gitlawb.com/v1",
     "model": "mimo-v2.5-pro",
-    "api_key": "ogw_live_e00b07a96253577cd3933a5bb9bee292",
+    "api_key": "",
     "max_tokens": 16384,
     "temperature": 0.7,
     "multimodal_enabled": True,
@@ -76,10 +76,10 @@ PRESET_PROVIDERS = [
         "base_url": "https://opengateway.gitlawb.com/v1",
         "models": ["mimo-v2.5-pro", "mimo-v2-flash"],
         "default_model": "mimo-v2.5-pro",
-        "api_key": "ogw_live_e00b07a96253577cd3933a5bb9bee292",
+        "api_key": "",
         "color": "#10b981",
         "guide_url": "https://opengateway.gitlawb.com",
-        "guide_text": "OpenGateway aktif secara default — tidak perlu API key.\nJika ingin pakai key sendiri, bisa generate di situs.",
+        "guide_text": "OpenGateway perlu API key.\nBuka opengateway.gitlawb.com untuk generate key, lalu paste di sini.",
     },
     {
         "id": "groq",
@@ -276,14 +276,7 @@ def get_active_config():
         cfg = DEFAULTS.copy()
         cfg["base_url"] = provider.get("base_url", DEFAULTS["base_url"])
         cfg["model"] = provider.get("model", DEFAULTS["model"])
-        # Fallback: use preset api_key if provider key is empty
-        api_key = provider.get("api_key", "")
-        if not api_key:
-            for preset in PRESET_PROVIDERS:
-                if preset["id"] == provider.get("id"):
-                    api_key = preset.get("api_key", "")
-                    break
-        cfg["api_key"] = api_key
+        cfg["api_key"] = provider.get("api_key", "")
         cfg["active_provider"] = provider.get("id", "default")
     # Ensure system_prompt has work_dir injected
     if "{work_dir}" in cfg.get("system_prompt", ""):
