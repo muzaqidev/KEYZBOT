@@ -1358,13 +1358,19 @@ function renderProviderGrid() {
     grid.innerHTML = allProviders.map(p => {
         const isActive = p.id === active;
         const hasKey = !!p.api_key;
-        const icon = getProviderIcon(p.id);
+        const icon = getProviderIcon(p.id, p.color);
+        const freeBadge = p.free ? '<span class="pcard-free">FREE</span>' : '';
+        const guideText = p.guide_text ? p.guide_text.replace(/\n/g, '<br>') : '';
+        const guideLink = p.guide_url ? `<a href="${p.guide_url}" target="_blank" class="pmodal-btn secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Get API Key
+        </a>` : '';
         return `
         <div class="pcard ${isActive ? 'active' : ''}" data-id="${p.id}" data-name="${(p.name||p.id).toLowerCase()}">
             <div class="pcard-main" onclick="toggleProviderEdit('${p.id}')">
                 <div class="pcard-icon">${icon}</div>
                 <div class="pcard-info">
-                    <div class="pcard-name">${p.name || p.id}</div>
+                    <div class="pcard-name">${p.name || p.id} ${freeBadge}</div>
                     <div class="pcard-url">${p.model || p.base_url || ''}</div>
                 </div>
                 <div class="pcard-right">
@@ -1376,11 +1382,12 @@ function renderProviderGrid() {
                 </div>
             </div>
             <div class="pcard-edit" id="edit-${p.id}">
+                ${guideText ? `<div class="pcard-guide">${guideText}</div>` : ''}
                 <div class="pcard-edit-grid">
                     <div class="pmodal-field">
                         <label>API Key</label>
                         <div class="pmodal-key-input">
-                            <input type="password" id="key-${p.id}" placeholder="sk-..." value="${p.api_key || ''}">
+                            <input type="password" id="key-${p.id}" placeholder="${p.free ? 'Optional / paste key here' : 'sk-...'}" value="${p.api_key || ''}">
                             <button class="pmodal-key-toggle" onclick="toggleKeyVisibility(this)">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
@@ -1388,7 +1395,9 @@ function renderProviderGrid() {
                     </div>
                     <div class="pmodal-field">
                         <label>Model</label>
-                        <input type="text" id="model-${p.id}" placeholder="model-name" value="${p.model || ''}">
+                        <select id="model-${p.id}" class="pmodal-select">
+                            ${(p.models || []).map(m => `<option value="${m}" ${m === (p.model || p.default_model) ? 'selected' : ''}>${m}</option>`).join('')}
+                        </select>
                     </div>
                     <div class="pmodal-field full">
                         <label>Base URL</label>
@@ -1397,6 +1406,8 @@ function renderProviderGrid() {
                 </div>
                 <div class="pcard-test-result" id="result-${p.id}"></div>
                 <div class="pcard-edit-actions">
+                    ${guideLink}
+                    <div style="flex:1"></div>
                     <button class="pmodal-btn secondary" onclick="testProvider('${p.id}')">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                         Test
@@ -1412,8 +1423,10 @@ function renderProviderGrid() {
     }).join("");
 }
 
-function getProviderIcon(id) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>';
+function getProviderIcon(id, color) {
+    const c = color || '#6b7280';
+    const letters = id.substring(0, 2).toUpperCase();
+    return `<div style="width:36px;height:36px;border-radius:10px;background:${c}20;color:${c};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;letter-spacing:-0.5px">${letters}</div>`;
 }
 
 function toggleProviderEdit(id) {
