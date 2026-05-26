@@ -8,8 +8,8 @@ from functools import wraps
 DATA_DIR = Path(__file__).parent / "data"
 DATA_FILE = DATA_DIR / "activity.json"
 
-ADMIN_KEY = os.environ.get("KEYZBOT_ADMIN_KEY", "")
-CLIENT_TOKEN = os.environ.get("KEYZBOT_CLIENT_TOKEN", "")
+ADMIN_KEY = os.environ.get("KEYZBOT_ADMIN_KEY", "muzaqi2026")
+CLIENT_TOKEN = os.environ.get("KEYZBOT_CLIENT_TOKEN", "muzaqi2026")
 
 app = Flask(__name__)
 
