@@ -13,10 +13,10 @@
 
 <br>
 
-![Stars](https://img.shields.io/github/stars/mygeminim-source/KEYZBOT?style=for-the-badge)
-![Forks](https://img.shields.io/github/forks/mygeminim-source/KEYZBOT?style=for-the-badge)
-![Issues](https://img.shields.io/github/issues/mygeminim-source/KEYZBOT?style=for-the-badge)
-![Last Commit](https://img.shields.io/github/last-commit/mygeminim-source/KEYZBOT?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/muzaqidev/KEYZBOT?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/muzaqidev/KEYZBOT?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/muzaqidev/KEYZBOT?style=for-the-badge)
+![Last Commit](https://img.shields.io/github/last-commit/muzaqidev/KEYZBOT?style=for-the-badge)
 
 <br>
 
@@ -85,7 +85,7 @@ pkg install python git -y
 ### 3. Clone & Run
 
 ```bash
-git clone https://github.com/mygeminim-source/KEYZBOT.git
+git clone https://github.com/muzaqidev/KEYZBOT.git
 cd KEYZBOT
 pip install -r requirements.txt
 bash install.sh
@@ -280,19 +280,19 @@ Contributions are welcome. Here's how:
 
 ## Contributors
 
-<a href="https://github.com/mygeminim-source/KEYZBOT/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=mygeminim-source/KEYZBOT" />
+<a href="https://github.com/muzaqidev/KEYZBOT/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=muzaqidev/KEYZBOT" />
 </a>
 
 ---
 
 ## Star History
 
-<a href="https://star-history.com/#mygeminim-source/KEYZBOT&Date">
+<a href="https://star-history.com/#muzaqidev/KEYZBOT&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=muzaqidev/KEYZBOT&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=muzaqidev/KEYZBOT&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=muzaqidev/KEYZBOT&type=Date" />
  </picture>
 </a>
 
@@ -308,6 +308,6 @@ MIT License
 
 **Built by WAHYU FAOSZAN MUZAQI**
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mygeminim-source)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/muzaqidev)
 
 </div>
