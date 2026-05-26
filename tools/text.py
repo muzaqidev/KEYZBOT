@@ -1,6 +1,6 @@
 """Text processing, regex, encoding, and hashing tools."""
 
-import re, hashlib, base64, os, difflib, urllib.parse, json, string, secrets
+import re, hashlib, base64, os, difflib, urllib.parse, json
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "regex_match", "description": "Test a regex pattern against text. Returns all matches with groups.", "parameters": {"type": "object", "properties": {"pattern": {"type": "string", "description": "Regex pattern"}, "text": {"type": "string", "description": "Text to match against"}, "flags": {"type": "string", "description": "Flags: 'i' for case-insensitive, 'm' for multiline, 's' for dotall"}}, "required": ["pattern", "text"]}}},
@@ -22,7 +22,6 @@ TOOL_DEFS = [
     {"type": "function", "function": {"name": "html_encode", "description": "HTML-encode special characters.", "parameters": {"type": "object", "properties": {"text": {"type": "string", "description": "Text to encode"}}, "required": ["text"]}}},
     {"type": "function", "function": {"name": "html_decode", "description": "Decode HTML entities.", "parameters": {"type": "object", "properties": {"text": {"type": "string", "description": "HTML text to decode"}}, "required": ["text"]}}},
     {"type": "function", "function": {"name": "jwt_decode", "description": "Decode a JWT token (without verification). Shows header and payload.", "parameters": {"type": "object", "properties": {"token": {"type": "string", "description": "JWT token string"}}, "required": ["token"]}}},
-    {"type": "function", "function": {"name": "password_generate", "description": "Generate a secure random password.", "parameters": {"type": "object", "properties": {"length": {"type": "integer", "description": "Password length (default 16)"}, "uppercase": {"type": "boolean", "description": "Include uppercase (default true)"}, "lowercase": {"type": "boolean", "description": "Include lowercase (default true)"}, "digits": {"type": "boolean", "description": "Include digits (default true)"}, "symbols": {"type": "boolean", "description": "Include symbols (default true)"}}, "required": []}}},
     {"type": "function", "function": {"name": "uuid_generate", "description": "Generate a UUID (v4 random).", "parameters": {"type": "object", "properties": {"count": {"type": "integer", "description": "Number of UUIDs to generate (default 1)"}}, "required": []}}},
 ]
 
@@ -209,17 +208,6 @@ def execute(name, args, work_dir=None):
             header = json.loads(base64.urlsafe_b64decode(parts[0] + "=="))
             payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=="))
             return f"Header:\n{json.dumps(header, indent=2)}\n\nPayload:\n{json.dumps(payload, indent=2)}"
-
-        elif name == "password_generate":
-            length = args.get("length", 16)
-            chars = ""
-            if args.get("uppercase", True): chars += string.ascii_uppercase
-            if args.get("lowercase", True): chars += string.ascii_lowercase
-            if args.get("digits", True): chars += string.digits
-            if args.get("symbols", True): chars += "!@#$%^&*()_+-=[]{}|;:,.<>?"
-            if not chars:
-                chars = string.ascii_letters + string.digits
-            return "".join(secrets.choice(chars) for _ in range(length))
 
         elif name == "uuid_generate":
             import uuid

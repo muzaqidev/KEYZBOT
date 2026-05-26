@@ -12,6 +12,8 @@ if _PARENT not in sys.path:
 def _build_tools():
     from tools import bash, file_ops, web, notebook, monitor, image, git_ops, mcp, ask_user, task_tools, cron_tools
     from tools import project_detect, lint_test, github, doc_reader
+    from tools import data, network, code_analysis, docker_tools, packages, text, system, archive
+    from tools import security, media, cloud, workflow, notify, math_tools, ai_tools, regex_tools, git_advanced
     tools = [bash.TOOL_DEF]
     tools.extend(file_ops.TOOL_DEFS)
     tools.extend(web.TOOL_DEFS)
@@ -27,6 +29,24 @@ def _build_tools():
     tools.extend(lint_test.TOOL_DEFS)
     tools.extend(github.TOOL_DEFS)
     tools.extend(doc_reader.TOOL_DEFS)
+    # New tool modules (17 modules)
+    tools.extend(data.TOOL_DEFS)
+    tools.extend(network.TOOL_DEFS)
+    tools.extend(code_analysis.TOOL_DEFS)
+    tools.extend(docker_tools.TOOL_DEFS)
+    tools.extend(packages.TOOL_DEFS)
+    tools.extend(text.TOOL_DEFS)
+    tools.extend(system.TOOL_DEFS)
+    tools.extend(archive.TOOL_DEFS)
+    tools.extend(security.TOOL_DEFS)
+    tools.extend(media.TOOL_DEFS)
+    tools.extend(cloud.TOOL_DEFS)
+    tools.extend(workflow.TOOL_DEFS)
+    tools.extend(notify.TOOL_DEFS)
+    tools.extend(math_tools.TOOL_DEFS)
+    tools.extend(ai_tools.TOOL_DEFS)
+    tools.extend(regex_tools.TOOL_DEFS)
+    tools.extend(git_advanced.TOOL_DEFS)
     # Add agent-level tools
     tools.extend(_AGENT_TOOL_DEFS)
     return tools
