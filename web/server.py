@@ -92,6 +92,8 @@ _user_sessions = {}  # browser_sid -> {chats: {chat_id: {...}}, active_chat: str
 _MAX_SESSIONS = 50
 # Track which chats are currently streaming (for reconnect recovery)
 _streaming_chats = {}  # (browser_id, chat_id) -> True
+# Accumulated partial text during streaming (for reconnect recovery)
+_stream_buffers = {}  # (browser_id, chat_id) -> {"text": str, "started": bool, "done": bool}
 _SESSION_TTL = 3600  # 1 hour
 
 # ─── User Profile ────────────────────────────────────────────────────────────
@@ -245,7 +247,7 @@ def _start_cron():
 @app.after_request
 def _no_cache(response):
     """Disable caching for static files during development."""
-    if response.mimetype in ("text/html", "text/css", "application/javascript"):
+    if response.mimetype in ("text/html", "text/css", "application/javascript", "text/javascript", "image/svg+xml"):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
@@ -364,14 +366,18 @@ def on_connect():
         bot = active_chat.get("agent")
         if bot:
             messages = _build_messages_for_ui(bot)
-    # Check if active chat is currently streaming — restore thinking animation
-    is_streaming = (bid, user["active_chat"]) in _streaming_chats
+    # Check if active chat is currently streaming — restore thinking/partial text
+    key = (bid, user["active_chat"])
+    is_streaming = key in _streaming_chats
+    buf = _stream_buffers.get(key, {})
     emit("connected", {
         "version": "9.1",
         "chats": _make_chat_summary(user),
         "active_chat": user["active_chat"],
         "messages": messages,
         "streaming": is_streaming,
+        "stream_text": buf.get("text", ""),
+        "stream_done": buf.get("done", False),
         "profile": _load_profile(),
         "update_available": _update_available,
         "latest_commit": _latest_commit,
@@ -383,7 +389,10 @@ def on_disconnect():
     bid = _get_browser_id()
     if bid in _user_sessions:
         web_sessions.save_session(bid, _user_sessions[bid])
-        _user_sessions.pop(bid, None)
+        # Don't remove session if any chat is still streaming
+        has_streaming = any(k[0] == bid for k in _streaming_chats)
+        if not has_streaming:
+            _user_sessions.pop(bid, None)
 
 @socketio.on("new_chat")
 def on_new_chat():
@@ -510,7 +519,8 @@ def on_user_message(data):
         return
 
     stream_chat(sid, bot, text, user["active_chat"], images=images,
-                get_browser_id=_get_browser_id, user_sessions=_user_sessions)
+                get_browser_id=_get_browser_id, user_sessions=_user_sessions,
+                streaming_chats=_streaming_chats, stream_buffers=_stream_buffers)
     chat["messages_count"] += 1
     web_sessions.save_session(sid, user)
     emit("chats_updated", {"chats": _make_chat_summary(user)})

@@ -16,9 +16,30 @@ socket.on("connected", (data) => {
             else if (m.type === "tool_call") addToolCall(m.name, m.args);
             else if (m.type === "tool_result") addToolResultDirect(m.text);
         });
-        scrollToBottom();
+        scrollBottom();
     }
-    if (data.streaming) showThinking();
+    if (data.streaming) {
+        if (data.stream_text && data.stream_text.length > 0) {
+            // Restore partial streaming text from before refresh
+            hideWelcome(); removeThinking(); hadStream = true; isStreaming = true;
+            streamRawText = data.stream_text;
+            const { row, contentEl } = createBotMessage();
+            streamEl = row; streamContentEl = contentEl;
+            messagesEl.appendChild(row);
+            if (data.stream_done) {
+                contentEl.innerHTML = renderMarkdown(streamRawText);
+                highlightCode(contentEl); addCopyButtons(contentEl); checkTableScroll(contentEl);
+                streamEl = null; streamContentEl = null; streamRawText = "";
+                isStreaming = false;
+            } else {
+                contentEl.innerHTML = renderMarkdown(streamRawText) + '<span class="cursor"></span>';
+                highlightCode(contentEl); checkTableScroll(contentEl);
+            }
+            scrollBottom();
+        } else {
+            showThinking();
+        }
+    }
     if (data.update_available) showUpdateToast();
 });
 

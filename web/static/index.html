@@ -14,8 +14,11 @@
     <meta http-equiv="Expires" content="0">
     <!-- Hamburger hidden by JS .hidden class — no CSS override needed -->
     <script>
-        // Nuke any cached service workers
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => r.forEach(s => s.unregister())); }
+        // Nuke any cached service workers + force reload on stale cache
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(r => r.forEach(s => s.unregister()));
+            caches && caches.keys && caches.keys().then(names => names.forEach(n => caches.delete(n)));
+        }
         // Hide sidebar on mobile at load
         document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth <= 768) {
@@ -416,10 +419,10 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
-    <script src="/js/core.js?v=2"></script>
-    <script src="/js/chat.js?v=2"></script>
-    <script src="/js/socket.js?v=2"></script>
-    <script src="/js/sidebar.js?v=2"></script>
-    <script src="/js/providers.js?v=2"></script>
+    <script src="/js/core.js?v=4"></script>
+    <script src="/js/chat.js?v=4"></script>
+    <script src="/js/socket.js?v=4"></script>
+    <script src="/js/sidebar.js?v=4"></script>
+    <script src="/js/providers.js?v=4"></script>
 </body>
 </html>

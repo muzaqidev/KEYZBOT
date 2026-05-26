@@ -62,19 +62,27 @@ def exec_tool(name, args, work_dir, bot=None):
         return f"Error: {e}"
 
 
-def stream_chat(sid, bot, user_input, chat_id="", images=None, get_browser_id=None, user_sessions=None):
+def stream_chat(sid, bot, user_input, chat_id="", images=None, get_browser_id=None, user_sessions=None, streaming_chats=None, stream_buffers=None):
     """Main streaming chat entry point. Runs the agent loop with tool calling."""
-    _streaming_chats = {}
-    _streaming_chats[(sid, chat_id)] = True
+    sc = streaming_chats or {}
+    key = (sid, chat_id)
+    sc[key] = True
+    if stream_buffers is not None:
+        stream_buffers[key] = {"text": "", "started": False, "done": False}
     try:
         _stream_chat_inner(sid, bot, user_input, chat_id, images=images,
-                           get_browser_id=get_browser_id, user_sessions=user_sessions)
+                           get_browser_id=get_browser_id, user_sessions=user_sessions,
+                           stream_buffers=stream_buffers, key=key)
     finally:
-        _streaming_chats.pop((sid, chat_id), None)
+        sc.pop(key, None)
+        if stream_buffers is not None:
+            buf = stream_buffers.get(key, {})
+            buf["done"] = True
 
 
 def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
-                       get_browser_id=None, user_sessions=None):
+                       get_browser_id=None, user_sessions=None,
+                       stream_buffers=None, key=None):
     import requests as req
 
     # Build user message — multimodal if images present
@@ -158,7 +166,11 @@ def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
                 if not started:
                     started = True
                     safe_emit("bot_stream_start", {"chat_id": chat_id})
+                    if stream_buffers and key:
+                        stream_buffers[key]["started"] = True
                 full_text += content
+                if stream_buffers and key:
+                    stream_buffers[key]["text"] = full_text
                 safe_emit("bot_stream_chunk", {"text": content, "chat_id": chat_id})
 
             for tc in (delta.get("tool_calls") or []):
@@ -218,11 +230,15 @@ def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
             bot._update_cost(0, out_toks)
         safe_emit("chat_done", {"text": full_text, "tokens": bot.tokens, "cost": round(bot.cost, 4), "chat_id": chat_id})
         safe_emit("status", make_status(bot))
+        if stream_buffers and key:
+            stream_buffers.pop(key, None)
         if user_sessions and browser_sid in user_sessions:
             web_sessions.save_session(browser_sid, user_sessions[browser_sid])
         return
 
     safe_emit("chat_done", {"text": full_text or "(max rounds)", "tokens": bot.tokens, "cost": round(bot.cost, 4), "chat_id": chat_id})
     safe_emit("status", make_status(bot))
+    if stream_buffers and key:
+        stream_buffers.pop(key, None)
     if user_sessions and browser_sid in user_sessions:
         web_sessions.save_session(browser_sid, user_sessions[browser_sid])
