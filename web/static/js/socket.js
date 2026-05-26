@@ -9,7 +9,7 @@ socket.on("connected", (data) => {
     fetchConfig();
     if (data.profile && !data.profile.setup_complete) showSetupModal();
     if (data.messages && data.messages.length > 0) {
-        hideWelcome();
+        clearMessages(); hideWelcome();
         data.messages.forEach(m => {
             if (m.type === "user") addUserMessage(m.text, m.images);
             else if (m.type === "bot") addBotMessage(m.text);
