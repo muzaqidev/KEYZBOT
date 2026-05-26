@@ -760,11 +760,18 @@ function hideWelcome() { if (welcomeEl) welcomeEl.style.display = "none"; }
 function showWelcome() { if (welcomeEl) welcomeEl.style.display = "flex"; }
 function clearMessages() {
     messagesEl.querySelectorAll(".msg-row, .tool-accordion, .msg-ephemeral").forEach(r => r.remove());
+    _userScrolledUp = false;
+    const sbb = document.getElementById('scroll-bottom-btn');
+    if (sbb) sbb.classList.remove('visible');
 }
 
 function clearChatUI() {
     const rows = messagesEl.querySelectorAll(".msg-row, .tool-accordion, .msg-ephemeral");
     if (rows.length === 0) { showWelcome(); return; }
+    // Hide scroll button immediately
+    _userScrolledUp = false;
+    const sbb = document.getElementById('scroll-bottom-btn');
+    if (sbb) sbb.classList.remove('visible');
     // Fade out all messages
     rows.forEach(function(row, i) {
         row.style.transition = "opacity .25s ease " + (i * 0.03) + "s, transform .25s ease " + (i * 0.03) + "s";
