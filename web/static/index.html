@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KEYZBOT</title>
+    <link rel="stylesheet" href="/style.css?v=23">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- Hamburger hidden by JS .hidden class — no CSS override needed -->
+    <script>
+        // Nuke any cached service workers
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => r.forEach(s => s.unregister())); }
+        // Hide sidebar on mobile at load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                var sb = document.getElementById('sidebar');
+                if (sb) sb.classList.add('hidden');
+            }
+        });
+        window.addEventListener('pageshow', function() {
+            if (window.innerWidth <= 768) {
+                var sb = document.getElementById('sidebar');
+                if (sb && !sb.classList.contains('hidden')) sb.classList.add('hidden');
+                var ov = document.getElementById('sidebar-overlay');
+                if (ov) ov.classList.remove('active');
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-web-links@0.11.0/lib/addon-web-links.min.js"></script>
+</head>
+<body>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- AskUser Modal -->
+    <div id="ask-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-title" id="ask-title">Confirm</div>
+            <div class="modal-body" id="ask-body"></div>
+            <div class="modal-actions" id="ask-actions"></div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-title">Export Chat</div>
+            <div class="modal-body export-options">
+                <button class="export-btn" onclick="exportChat('text')">
+                    <span class="export-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </span>
+                    <span class="export-label">Plain Text</span>
+                    <span class="export-desc">.txt format</span>
+                </button>
+                <button class="export-btn" onclick="exportChat('markdown')">
+                    <span class="export-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                    <span class="export-label">Markdown</span>
+                    <span class="export-desc">.md format</span>
+                </button>
+                <button class="export-btn" onclick="exportChat('json')">
+                    <span class="export-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </span>
+                    <span class="export-label">JSON</span>
+                    <span class="export-desc">Raw messages</span>
+                </button>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal('export-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div id="rename-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-title">Rename Chat</div>
+            <div class="modal-body">
+                <input type="text" id="rename-input" class="modal-input" placeholder="Chat name..." maxlength="50">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal('rename-modal')">Cancel</button>
+                <button class="modal-btn" onclick="confirmRename()">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hamburger Menu (created by JS — do not add HTML here) -->
+
+    <!-- Provider Config Modal -->
+    <div id="provider-modal" class="modal hidden">
+        <div class="modal-content provider-modal-content">
+            <div class="pmodal-header">
+                <div class="pmodal-header-left">
+                    <div class="pmodal-title">Provider Settings</div>
+                    <div class="pmodal-subtitle">Configure your AI providers and API keys</div>
+                </div>
+                <button class="pmodal-close" onclick="closeModal('provider-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="pmodal-active-banner" id="pmodal-active-banner">
+                <div class="pmodal-active-icon" id="pmodal-active-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                </div>
+                <div class="pmodal-active-info">
+                    <div class="pmodal-active-label">Active Provider</div>
+                    <div class="pmodal-active-name" id="pmodal-active-name">-</div>
+                    <div class="pmodal-active-model" id="pmodal-active-model">-</div>
+                </div>
+                <div class="pmodal-active-status" id="pmodal-active-status">
+                    <div class="status-dot"></div>
+                    <span>Connected</span>
+                </div>
+            </div>
+
+            <div class="pmodal-search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="provider-search" placeholder="Search providers..." oninput="filterProviders()">
+            </div>
+
+            <div class="pmodal-body">
+                <div class="pmodal-grid" id="provider-grid"></div>
+                <div class="pmodal-add-section">
+                    <div class="pmodal-add-form" id="add-provider-form">
+                        <div class="pmodal-form-grid">
+                            <div class="pmodal-field">
+                                <label>Provider ID</label>
+                                <input type="text" id="custom-id" placeholder="my-provider">
+                            </div>
+                            <div class="pmodal-field">
+                                <label>Display Name</label>
+                                <input type="text" id="custom-name" placeholder="My API Provider">
+                            </div>
+                            <div class="pmodal-field full">
+                                <label>Base URL</label>
+                                <input type="text" id="custom-url" placeholder="https://api.example.com/v1">
+                            </div>
+                            <div class="pmodal-field">
+                                <label>API Key</label>
+                                <div class="pmodal-key-input">
+                                    <input type="password" id="custom-key" placeholder="sk-...">
+                                    <button class="pmodal-key-toggle" onclick="toggleKeyVisibility(this)">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pmodal-field">
+                                <label>Model</label>
+                                <input type="text" id="custom-model" placeholder="gpt-4o">
+                            </div>
+                        </div>
+                        <div class="pmodal-form-actions">
+                            <button class="pmodal-btn primary" onclick="addCustomProvider()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Add Provider
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">U</div>
+                    <span id="sidebar-user-name">User</span>
+                </div>
+                <button id="new-chat-btn" onclick="newChat()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    New Chat
+                </button>
+            </div>
+
+            <div class="sidebar-section" id="sessions-section">
+                <div class="section-label">Chats</div>
+                <div id="sessions-list"></div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-label">Capabilities</div>
+                <button class="sidebar-btn" onclick="runCmd('/tools')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    Tools
+                    <span class="sidebar-badge" id="tools-count"></span>
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/skills')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Skills
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/agents')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                    Agents
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/browse')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    Browse
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/git')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/></svg>
+                    Git
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/mcp')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                    MCP Servers
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-label">Memory</div>
+                <button class="sidebar-btn" onclick="runCmd('/recall')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.24 7.76A10 10 0 0 0 12 2v10h10a10 10 0 0 0-1.76-4.24z"/></svg>
+                    Memories
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-label">Workspace</div>
+                <button class="sidebar-btn" onclick="runCmd('/plan')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Plans
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/tasks')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Tasks
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/hooks')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/></svg>
+                    Hooks
+                </button>
+                <button class="sidebar-btn" onclick="runCmd('/cron')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Scheduler
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-meta">
+                    <span id="sidebar-model"></span>
+                    <span id="sidebar-tokens"></span>
+                </div>
+                <div class="sidebar-footer-actions">
+                    <button class="sidebar-btn small" onclick="toggleTheme()" title="Toggle theme">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button class="sidebar-btn small" onclick="openModal('export-modal')" title="Export">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                    <button class="sidebar-btn small" onclick="runCmd('/config')" title="Settings">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg>
+                    </button>
+                    <button class="sidebar-btn small" onclick="runCmd('/help')" title="Help">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main id="main">
+            <header id="topbar">
+                <button id="sidebar-toggle" onclick="toggleSidebar()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div class="topbar-center">
+                    <span class="topbar-title">KEYZBOT</span>
+                    <span class="topbar-divider"></span>
+                    <div class="topbar-tags">
+                        <span id="topbar-model" class="topbar-tag accent"></span>
+                        <span id="topbar-session" class="topbar-tag"></span>
+                        <span id="topbar-perm" class="topbar-tag green"></span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button id="hamburger-btn" onclick="toggleHamburger()" title="Menu">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <div id="messages-container">
+                <div id="messages">
+                    <div class="welcome" id="welcome">
+                        <div class="welcome-icon">K</div>
+                        <h1>How can I help you today?</h1>
+                        <p>I can write code, run commands, manage files, search the web, work with notebooks, and more.</p>
+                        <div class="welcome-chips">
+                            <button onclick="sendSuggestion('Help me write a Python script')">Write a script</button>
+                            <button onclick="sendSuggestion('Explain this codebase')">Explain code</button>
+                            <button onclick="sendSuggestion('Search and refactor')">Refactor code</button>
+                            <button onclick="sendSuggestion('/help')">Show commands</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Embedded Terminal Panel -->
+
+            <div id="input-area">
+                <div class="cmd-dropdown hidden" id="cmd-dropdown"></div>
+                <div class="input-container">
+                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" title="Upload file">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    </button>
+                    <input type="file" id="file-input" style="display:none" onchange="handleFileUpload(this)" multiple>
+                    <textarea id="user-input" placeholder="Message KEYZBOT..." rows="1" autofocus></textarea>
+                    <button id="send-btn" onclick="send()" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span id="status-bar">Ready</span>
+                    <span class="input-hint">Enter to send · Shift+Enter for newline · / for commands</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Setup Modal -->
+    <div id="setup-overlay" style="display:none">
+        <div class="setup-card">
+            <div class="setup-header">
+                <div class="setup-logo">K</div>
+                <h1>Setup KEYZBOT</h1>
+                <p>Konfigurasi awal agar AI mengenal Anda</p>
+            </div>
+            <div class="setup-steps">
+                <div class="setup-step active" data-step="1">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="setup-name" placeholder="Masukkan nama Anda" autocomplete="name">
+                </div>
+                <div class="setup-step" data-step="2">
+                    <label>Tanggal Lahir</label>
+                    <div class="setup-date-row">
+                        <select id="setup-day"><option value="">Hari</option></select>
+                        <select id="setup-month"><option value="">Bulan</option></select>
+                        <select id="setup-year"><option value="">Tahun</option></select>
+                    </div>
+                </div>
+                <div class="setup-step" data-step="3">
+                    <label>Bahasa</label>
+                    <div class="setup-lang-options">
+                        <button class="setup-lang active" data-lang="id">Indonesia</button>
+                        <button class="setup-lang" data-lang="en">English</button>
+                    </div>
+                </div>
+            </div>
+            <div class="setup-nav">
+                <button id="setup-prev" class="setup-btn secondary" style="visibility:hidden">Kembali</button>
+                <div class="setup-dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+                <button id="setup-next" class="setup-btn primary">Selanjutnya</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="/app.js?v=25"></script>
+</body>
+</html>

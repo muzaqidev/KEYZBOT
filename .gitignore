@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.jpg
+*.png
+*.gif
+*.webp
+*.bmp
+*.svg
+history/
+data/
+config.json
+providers.json
+memory/
+plans/
+*.log
+.env
