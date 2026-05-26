@@ -2,48 +2,55 @@
 
 # KEYZBOT
 
-**Full-Stack Autonomous AI Agent**
+**Autonomous AI Agent for Android & Linux**
 
 <br>
 
-![Version](https://img.shields.io/badge/version-9.2-blue)
-![Python](https://img.shields.io/badge/python-3.8+-green)
-![Tools](https://img.shields.io/badge/tools-34-orange)
-![License](https://img.shields.io/badge/license-MIT-purple)
-![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20Linux-lightgrey)
+![Version](https://img.shields.io/badge/version-9.2-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/python-3.8+-green?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)
+![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20Linux-lightgrey?style=for-the-badge)
 
 <br>
 
-An autonomous AI coding agent with **34 built-in tools**, **multimodal vision**, **web UI**, **provider management**, and **auto-updates** — built to run natively on Android via Termux.
+Full-stack autonomous coding agent that runs natively on Android via Termux.
 
-**Works out of the box** — no API key required to start. OpenGateway is configured by default.
+**34 built-in tools. Web UI. Multi-provider. No API key needed to start.**
+
+<br>
+
+**[Quick Start](#quick-start)** &nbsp;&middot;&nbsp;
+**[Features](#features)** &nbsp;&middot;&nbsp;
+**[Providers](#provider-management)** &nbsp;&middot;&nbsp;
+**[Tools](#tools)** &nbsp;&middot;&nbsp;
+**[Architecture](#architecture)**
 
 </div>
 
 ---
 
-## Highlights
+## Features
 
-| | Feature | Description |
-|---|---|---|
-| | **Zero Config** | OpenGateway works instantly — no API key needed. Just clone and run. |
-| | **Provider Manager** | Add, edit, delete, and switch between providers from the web UI. Preset templates for Groq, SambaNova, Cerebras, OpenRouter. |
-| | **Auto-Update** | Checks GitHub on every startup + every 5 minutes. Web UI shows toast notification with "Update Now" button. CLI auto-pulls and restarts. |
-| | **Multimodal Chat** | Upload images alongside text. AI sees and analyzes them in real-time. Auto-compressed to 1024px JPEG 70%. |
-| | **34 Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub integration, and more. |
-| | **Web UI** | Responsive interface with dark/light theme, streaming, chat history, tool panels, drag-and-drop. |
-| | **Multi-Chat** | Create, switch, rename, and delete conversations. Full session persistence across refreshes. |
-| | **Sub-Agents** | Fork background agents for parallel task execution. |
-| | **Plan & Tasks** | Structured planning mode with task tracking and dependency management. |
-| | **Memory System** | Persistent memory across sessions — remember, recall, and forget. |
-| | **Streaming Resilience** | Server continues processing even if the client disconnects mid-stream. |
-| | **CLI + Web** | Use from terminal or browser. Same engine, two interfaces. |
+| Feature | Description |
+|---------|-------------|
+| **Zero Config** | OpenGateway pre-configured. Clone, install, run. No API key needed to start. |
+| **34 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
+| **Multi-Provider** | Switch between OpenGateway, Groq, SambaNova, Cerebras, OpenRouter, or any OpenAI-compatible API. |
+| **Web UI** | Dark/light theme, streaming responses, chat history, tool panels, drag-and-drop file upload. |
+| **Multi-Chat** | Create, switch, rename, delete conversations. Full session persistence across refreshes. |
+| **Multimodal Vision** | Upload images alongside text. AI analyzes them in real-time. Auto-compressed. |
+| **Sub-Agents** | Fork background agents for parallel task execution. |
+| **Plan & Tasks** | Structured planning mode with task tracking and dependency management. |
+| **Persistent Memory** | Remember, recall, and forget across sessions. |
+| **Auto-Update** | Checks GitHub every 5 minutes. One-click update from Web UI or auto-pull in CLI. |
+| **Streaming Resilience** | Server continues processing even if client disconnects mid-stream. |
+| **CLI + Web** | Terminal or browser. Same engine, two interfaces. |
 
 ---
 
 ## Quick Start
 
-### Step 1 — Install Termux (Android)
+### 1. Install Termux (Android)
 
 Download from **F-Droid** (not Play Store):
 
@@ -51,14 +58,14 @@ Download from **F-Droid** (not Play Store):
 https://f-droid.org/packages/com.termux/
 ```
 
-### Step 2 — Prepare Environment
+### 2. Setup Environment
 
 ```bash
 pkg update && pkg upgrade -y
 pkg install python git -y
 ```
 
-### Step 3 — Clone & Install
+### 3. Clone & Run
 
 ```bash
 git clone https://github.com/mygeminim-source/KEYZBOT.git
@@ -67,7 +74,7 @@ pip install -r requirements.txt
 bash install.sh
 ```
 
-### Step 4 — Launch
+### 4. Launch
 
 ```bash
 # CLI mode
@@ -78,32 +85,27 @@ python3 web/server.py
 # Open http://localhost:8080
 ```
 
-That's it. OpenGateway is pre-configured — no API key needed to start chatting.
+OpenGateway is pre-configured. Just start chatting.
 
 ---
 
 ## Provider Management
 
-KEYZBOT supports any OpenAI-compatible API. Manage providers from the web UI or config files.
+KEYZBOT supports any OpenAI-compatible API. Manage providers from the web UI or `providers.json`.
 
-### Preset Providers (ready to use)
+### Built-in Presets
 
-| Provider | Model | Free Tier | Status |
-|----------|-------|-----------|--------|
-| **OpenGateway** | mimo-v2.5-pro | Yes | Default |
-| **Groq** | Llama 3.3 70B | Yes | Preset |
-| **SambaNova** | DeepSeek V3.1 | Yes | Preset |
-| **Cerebras** | Llama 3.1 8B | Yes | Preset |
-| **OpenRouter** | 100+ models | Pay-per-use | Preset |
-| **OpenAI** | GPT-4o | Pay-per-use | Custom |
-| **Anthropic** | Claude 3.5 Sonnet | Pay-per-use | Custom |
+| Provider | Model | Free Tier |
+|----------|-------|-----------|
+| **OpenGateway** | mimo-v2.5-pro | Yes |
+| **Groq** | Llama 3.3 70B | Yes |
+| **SambaNova** | DeepSeek V3.1 | Yes |
+| **Cerebras** | Llama 3.1 8B | Yes |
+| **OpenRouter** | 100+ models | Pay-per-use |
 
-### Custom Providers
+### Custom Provider
 
-Add custom providers via:
-
-1. **Web UI** — Settings > Providers > Add Custom Provider
-2. **Config file** — Edit `providers.json`:
+Add via **Web UI** (Settings > Providers > Add) or edit `providers.json`:
 
 ```json
 {
@@ -127,7 +129,7 @@ Add custom providers via:
 
 ### CLI
 
-```
+```bash
 keyzbot                       # interactive mode
 keyzbot "explain this code"   # one-shot query
 keyzbot /tools                # list all tools
@@ -137,14 +139,14 @@ keyzbot /fork "refactor src"  # spawn sub-agent
 
 ### Web UI Commands
 
-```
-/model        switch model or provider
-/tools        list available tools
-/clear        clear current chat
-/export       export chat (json/text/markdown)
-/fast         toggle fast output mode
-/help         show all commands
-```
+| Command | Action |
+|---------|--------|
+| `/model` | Switch model or provider |
+| `/tools` | List available tools |
+| `/clear` | Clear current chat |
+| `/export` | Export chat (json/text/markdown) |
+| `/fast` | Toggle fast output mode |
+| `/help` | Show all commands |
 
 ### Keyboard Shortcuts
 
@@ -219,16 +221,13 @@ KEYZBOT/
 │   ├── tokenizer.py        # Token counting
 │   └── mcp.py              # MCP protocol
 │
-├── svg/                    # Brand assets
-│   └── keyzbot.svg         # Logo (1024x1024)
-│
 └── web/                    # Web UI
     ├── server.py           # Flask + SocketIO backend
     └── static/
         ├── index.html      # UI page
         ├── app.js          # Client logic
         ├── style.css       # Theme styles (dark/light)
-        └── keyzbot.svg     # Logo for web UI
+        └── keyzbot.svg     # Logo
 ```
 
 ---
@@ -244,31 +243,28 @@ KEYZBOT/
 
 ## Auto-Update
 
-KEYZBOT checks for updates on every launch and periodically:
+KEYZBOT checks for updates on every launch and every 5 minutes:
 
 ```
 [KEYZBOT] Checking for updates...
 [KEYZBOT] Updated! Restarting...
 ```
 
-- Runs `git fetch` behind the scenes (30s timeout)
-- Pulls only fast-forward changes (never overwrites local modifications)
+- Fast-forward only (never overwrites local changes)
 - Auto-installs new dependencies if `requirements.txt` changed
-- Silent fallback if offline — never blocks startup
-- Web UI shows toast notification with one-click "Update Now"
+- Silent fallback if offline
+- Web UI toast with one-click "Update Now"
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License
 
 ---
 
 <div align="center">
 
-**Built with care by WAHYU FAOSZAN MUZAQI**
-
-2024 — 2026
+**Built by WAHYU FAOSZAN MUZAQI**
 
 </div>
