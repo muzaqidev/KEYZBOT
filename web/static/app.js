@@ -958,8 +958,48 @@ function addThinking() {
 function removeThinking() { if (thinkingEl) { thinkingEl.remove(); thinkingEl = null; } }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-function scrollBottom() { requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; }); }
+function scrollBottom() {
+    requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+        _updateScrollBtn();
+    });
+}
 function esc(str) { const d = document.createElement("div"); d.textContent = str || ""; return d.innerHTML; }
+
+// ─── Scroll-to-bottom button ────────────────────────────────────────────────
+(function initScrollBtn() {
+    const btn = document.getElementById('scroll-bottom-btn');
+    if (!btn || !container) return;
+    let userScrolled = false;
+    function _atBottom() {
+        return container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+    }
+    window._updateScrollBtn = function() {
+        if (_atBottom()) {
+            btn.classList.remove('visible');
+        } else if (container.scrollHeight > container.clientHeight + 100) {
+            btn.classList.add('visible');
+        }
+    };
+    container.addEventListener('scroll', function() {
+        _updateScrollBtn();
+    }, {passive: true});
+})();
+
+// ─── Mobile keyboard viewport fix ───────────────────────────────────────────
+(function initKeyboardFix() {
+    const inputArea = document.getElementById('input-area');
+    if (!inputArea) return;
+    const vv = window.visualViewport;
+    if (!vv) return;
+    function fixLayout() {
+        const h = vv.height;
+        document.getElementById('app').style.height = h + 'px';
+        scrollBottom();
+    }
+    vv.addEventListener('resize', fixLayout);
+    vv.addEventListener('scroll', fixLayout);
+})();
 
 function renderMarkdown(text) {
     if (!text) return "";
