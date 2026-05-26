@@ -1,0 +1,18 @@
+services:
+  keyzbot:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - keyzbot-data:/app/data
+      - keyzbot-history:/app/history
+      - keyzbot-memory:/app/memory
+    environment:
+      - KEYZBOT_TOKEN=${KEYZBOT_TOKEN:-}
+      - KEYZBOT_SECRET=${KEYZBOT_SECRET:-}
+    restart: unless-stopped
+
+volumes:
+  keyzbot-data:
+  keyzbot-history:
+  keyzbot-memory:
