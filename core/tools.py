@@ -3,25 +3,39 @@
 import json, time
 from tools import bash, file_ops, web, notebook, monitor, image, git_ops, mcp, ask_user, task_tools, cron_tools
 from tools import project_detect, lint_test, github, doc_reader
+from tools import data, network, code_analysis, docker_tools, packages, text, system, archive
+from tools import security, media, cloud, workflow, notify, math_tools, ai_tools, regex_tools, git_advanced
 from . import plugins
+
+# Registry of all tool modules with their TOOL_NAMES
+_TOOL_MODULES = [
+    (web, None), (notebook, None), (monitor, None), (image, None),
+    (git_ops, None), (mcp, None), (ask_user, None), (task_tools, None),
+    (cron_tools, None), (project_detect, None), (lint_test, None),
+    (github, None), (doc_reader, None),
+    (data, None), (network, None), (code_analysis, None), (docker_tools, None),
+    (packages, None), (text, None), (system, None), (archive, None),
+    (security, None), (media, None), (cloud, None), (workflow, None),
+    (notify, None), (math_tools, None), (ai_tools, None), (regex_tools, None),
+    (git_advanced, None),
+]
+
+def _build_module_map():
+    """Build name->module mapping for fast dispatch."""
+    mapping = {}
+    for mod, _ in _TOOL_MODULES:
+        for tname in mod.TOOL_NAMES:
+            mapping[tname] = mod
+    return mapping
+
+_MODULE_MAP = _build_module_map()
 
 def get_all_tool_names():
     """Return set of all tool names."""
     names = {"bash"}
     names.update(file_ops._tool_name())
-    names.update(web.TOOL_NAMES)
-    names.update(notebook.TOOL_NAMES)
-    names.update(monitor.TOOL_NAMES)
-    names.update(image.TOOL_NAMES)
-    names.update(git_ops.TOOL_NAMES)
-    names.update(mcp.TOOL_NAMES)
-    names.update(ask_user.TOOL_NAMES)
-    names.update(task_tools.TOOL_NAMES)
-    names.update(cron_tools.TOOL_NAMES)
-    names.update(project_detect.TOOL_NAMES)
-    names.update(lint_test.TOOL_NAMES)
-    names.update(github.TOOL_NAMES)
-    names.update(doc_reader.TOOL_NAMES)
+    for mod, _ in _TOOL_MODULES:
+        names.update(mod.TOOL_NAMES)
     names.update(plugins.get_all_tool_names())
     return names
 
@@ -44,32 +58,10 @@ def execute(name, args, work_dir=None, bot=None):
         return bash.execute(args, work_dir)
     elif name in file_ops._tool_name():
         return file_ops.execute(name, args, work_dir)
-    elif name in web.TOOL_NAMES:
-        return web.execute(name, args)
-    elif name in notebook.TOOL_NAMES:
-        return notebook.execute(name, args, work_dir)
-    elif name in monitor.TOOL_NAMES:
-        return monitor.execute(name, args, work_dir)
-    elif name in image.TOOL_NAMES:
-        return image.execute(name, args, work_dir)
-    elif name in git_ops.TOOL_NAMES:
-        return git_ops.execute(name, args, work_dir)
-    elif name in mcp.TOOL_NAMES:
-        return mcp.execute(name, args, work_dir)
-    elif name in ask_user.TOOL_NAMES:
-        return ask_user.execute(name, args, work_dir)
-    elif name in task_tools.TOOL_NAMES:
-        return task_tools.execute(name, args, work_dir)
-    elif name in cron_tools.TOOL_NAMES:
-        return cron_tools.execute(name, args, work_dir)
-    elif name in project_detect.TOOL_NAMES:
-        return project_detect.execute(name, args, work_dir)
-    elif name in lint_test.TOOL_NAMES:
-        return lint_test.execute(name, args, work_dir)
-    elif name in github.TOOL_NAMES:
-        return github.execute(name, args, work_dir)
-    elif name in doc_reader.TOOL_NAMES:
-        return doc_reader.execute(name, args, work_dir)
+
+    # All registered tool modules (fast lookup)
+    elif name in _MODULE_MAP:
+        return _MODULE_MAP[name].execute(name, args, work_dir)
 
     # Plugin tools
     elif name in plugins.get_all_tool_names():

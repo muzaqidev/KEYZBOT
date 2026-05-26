@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-9.2-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.8+-green?style=for-the-badge)
-![Tools](https://img.shields.io/badge/tools-36-orange?style=for-the-badge)
+![Tools](https://img.shields.io/badge/tools-259-orange?style=for-the-badge)
 ![Tests](https://img.shields.io/badge/tests-95%20passed-brightgreen?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20Linux-lightgrey?style=for-the-badge)
@@ -24,7 +24,7 @@
 
 Full-stack autonomous coding agent that runs natively on Android via Termux.
 
-**36 built-in tools. Web UI. Multi-provider. No API key needed to start.**
+**259 built-in tools. Web UI. Multi-provider. No API key needed to start.**
 
 <br>
 
@@ -43,7 +43,7 @@ Full-stack autonomous coding agent that runs natively on Android via Termux.
 | Feature | Description |
 |---------|-------------|
 | **Zero Config** | OpenGateway pre-configured. Clone, install, run. No API key needed to start. |
-| **36 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
+| **259 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
 | **Multi-Provider** | Switch between OpenGateway, Groq, SambaNova, Cerebras, OpenRouter, or any OpenAI-compatible API. |
 | **Web UI** | Dark/light theme, streaming responses, chat history, tool panels, drag-and-drop file upload. |
 | **Multi-Chat** | Create, switch, rename, delete conversations. Full session persistence across refreshes. |
@@ -182,23 +182,38 @@ keyzbot /fork "refactor src"  # spawn sub-agent
 
 ## Tools
 
-36 built-in tools across 16 modules.
+259 built-in tools across 30 modules.
 
-| Category | Tools | Description |
-|----------|-------|-------------|
-| **Shell** | `bash` | Execute shell commands with timeout and working directory control |
-| **Files** | `read_file` `write_file` `edit_file` `glob_files` `grep_files` `list_dir` `tree` | Full filesystem operations — read, write, edit, search, list, tree view |
-| **Git** | `git` | Full git CLI — commit, push, pull, diff, log, branch, etc. |
-| **GitHub** | `github` | GitHub API — PRs, issues, releases, checks, comments |
-| **Web** | `web_search` `web_fetch` `read_document` | Web search via SearXNG, page extraction via Jina, document parsing |
-| **Media** | `read_image` | Image reading and visual analysis with multimodal AI |
-| **Code** | `lint` `test_runner` `notebook_read` `notebook_edit` `notebook_run` | Linting, test execution, Jupyter notebook support |
-| **Monitoring** | `monitor_start` `monitor_status` `monitor_output` `monitor_stop` | Background process monitoring with stream output |
-| **Project** | `detect_project` | Auto-detect project type, framework, and structure |
-| **Tasks** | `task_create` `task_list` `task_update` `task_delete` | Structured task tracking with dependencies |
-| **Scheduling** | `cron_create` `cron_list` `cron_delete` | Cron-based job scheduling |
-| **Interaction** | `ask_user` | Interactive prompts for user input during tool execution |
-| **MCP** | `mcp_list` `mcp_call` | Model Context Protocol — connect to external tool servers |
+| Category | Tools | Count |
+|----------|-------|-------|
+| **Shell** | `bash` | 1 |
+| **Files** | `read_file` `write_file` `edit_file` `glob_files` `grep_files` `list_dir` `tree` | 7 |
+| **Git** | `git` + `git_blame` `git_search` `git_diff_stat` `git_stash_*` `git_cherry_pick` `git_rebase` `git_tag` `git_contributors` `git_file_history` `git_restore` `git_clean` `git_hooks_list` | 14 |
+| **GitHub** | `github` (PRs, issues, repos, gists, API) | 1 |
+| **Web** | `web_search` `web_fetch` `read_document` | 3 |
+| **Network** | `http_request` `api_test` `dns_lookup` `port_check` `port_scan` `whois_lookup` `ssl_check` `ping_host` `url_parse` `curl_parse` `network_interfaces` `traceroute` `download_file` `upload_file` `webhook_send` `local_ip` | 16 |
+| **Media** | `read_image` `image_resize` `image_convert` `image_crop` `image_info` `image_compress` `video_info` `video_to_gif` `video_thumbnail` `audio_info` `audio_convert` `audio_extract` `qr_generate` `qr_read` `screenshot` | 15 |
+| **Data** | `db_connect` `db_query` `db_schema` `db_dump` `csv_read` `csv_write` `json_read` `json_write` `json_query` `json_merge` `json_to_csv` `csv_to_json` `yaml_read` `yaml_write` `data_sample` `data_stats` | 16 |
+| **Code Analysis** | `code_search` `code_count` `find_functions` `find_classes` `find_imports` `find_unused_imports` `complexity_check` `code_diff` `format_code` `check_syntax` `find_strings` `find_todos` `dependency_list` `ast_dump` `rename_symbol` `duplicate_finder` | 16 |
+| **Docker** | `docker_ps` `docker_images` `docker_run` `docker_exec` `docker_logs` `docker_stop` `docker_start` `docker_rm` `docker_build` `docker_compose` `docker_inspect` `docker_prune` | 12 |
+| **Packages** | `pip_install` `pip_uninstall` `pip_list` `pip_show` `pip_freeze` `npm_install` `npm_uninstall` `npm_list` `npm_run` `apt_install` `apt_search` `pkg_info` | 12 |
+| **Text** | `regex_match` `regex_replace` `text_replace_bulk` `text_diff` `text_count` `text_extract` `text_transform` `text_wrap` `text_join` `text_sort` `text_dedup` `base64_encode` `base64_decode` `hash_generate` `url_encode` `url_decode` `html_encode` `html_decode` `jwt_decode` `password_generate` `uuid_generate` | 21 |
+| **System** | `sys_info` `cpu_info` `memory_info` `disk_info` `process_list` `process_info` `process_kill` `env_list` `env_get` `env_set` `uptime` `whoami` `hostname_info` `os_version` `temp_dir` `shell_info` `python_info` | 17 |
+| **Archive** | `zip_create` `zip_extract` `zip_list` `tar_create` `tar_extract` `tar_list` `gzip_compress` `gzip_decompress` `7z_create` `7z_extract` `archive_info` | 11 |
+| **Security** | `secret_scan` `vulnerability_scan` `password_strength` `password_generate` `cert_info` `file_permissions` `encrypt_aes` `decrypt_aes` `ip_reputation` `open_ports_check` `hash_crack` `url_safety_check` | 12 |
+| **Cloud/DevOps** | `ssh_exec` `scp_transfer` `rsync_sync` `aws_cli` `gcloud_cli` `azure_cli` `terraform_run` `ansible_run` `kubectl_run` `docker_hub_search` | 10 |
+| **Workflow** | `pipeline` `watch_file` `retry` `log_write` `log_read` `env_file_load` `env_file_save` `config_read` `config_write` `schedule_cron` `rate_limit` `checksum_verify` | 12 |
+| **Notifications** | `send_email` `ntfy_send` `telegram_send` `discord_send` `slack_send` `pushover_send` `gotify_send` `toast_notify` `bark_send` | 9 |
+| **Math** | `calculate` `unit_convert` `statistics_calc` `number_base_convert` `matrix_ops` `equation_solve` `percentage_calc` `random_generate` `fibonacci` `prime_check` `factorial` `geometry_calc` `interest_calc` | 13 |
+| **AI/LLM** | `text_summarize` `text_translate` `sentiment_analyze` `entity_extract` `keyword_extract` `language_detect` `code_explain` `code_review` `text_classify` `readme_generate` `changelog_generate` `docstring_generate` | 12 |
+| **Regex** | `regex_test` `regex_build` `regex_explain` `pattern_find_files` `pattern_count` `log_parse` `csv_parse_regex` `ansi_strip` `html_strip` `markdown_parse` | 10 |
+| **Code/Lint** | `lint` `test_runner` `notebook_read` `notebook_edit` `notebook_run` | 5 |
+| **Project** | `detect_project` | 1 |
+| **Tasks** | `task_create` `task_list` `task_update` `task_delete` | 4 |
+| **Scheduling** | `cron_create` `cron_list` `cron_delete` | 3 |
+| **Interaction** | `ask_user` | 1 |
+| **MCP** | `mcp_list` `mcp_call` | 2 |
+| **Monitoring** | `monitor_start` `monitor_status` `monitor_output` `monitor_stop` | 4 |
 
 ---
 
@@ -230,23 +245,40 @@ KEYZBOT/
 │   ├── plugins.py          # Plugin loader
 │   └── ui.py               # Terminal UI helpers
 │
-├── tools/                  # 36 built-in tools (16 modules)
-│   ├── bash.py             # Shell execution
-│   ├── file_ops.py         # File operations (read, write, edit, glob, grep, list, tree)
-│   ├── git_ops.py          # Git commands
-│   ├── github.py           # GitHub API
-│   ├── web.py              # Web search & fetch
-│   ├── image.py            # Image analysis
-│   ├── doc_reader.py       # Document parsing
-│   ├── lint_test.py        # Linting & testing
-│   ├── notebook.py         # Jupyter support
-│   ├── task_tools.py       # Task management
-│   ├── cron_tools.py       # Scheduled jobs
-│   ├── ask_user.py         # Interactive prompts
-│   ├── monitor.py          # Process monitoring
-│   ├── project_detect.py   # Project detection
-│   ├── tokenizer.py        # Token counting (utility)
-│   └── mcp.py              # MCP protocol
+├── tools/                  # 259 built-in tools (30 modules)
+│   ├── bash.py             # Shell execution (1 tool)
+│   ├── file_ops.py         # File operations (7 tools)
+│   ├── git_ops.py          # Git commands (1 tool)
+│   ├── git_advanced.py     # Advanced git — blame, search, stash, tag, etc. (13 tools)
+│   ├── github.py           # GitHub API (1 tool)
+│   ├── web.py              # Web search & fetch (2 tools)
+│   ├── image.py            # Image analysis (1 tool)
+│   ├── media.py            # Image/video/audio processing + QR (14 tools)
+│   ├── doc_reader.py       # Document parsing (1 tool)
+│   ├── lint_test.py        # Linting & testing (2 tools)
+│   ├── notebook.py         # Jupyter support (3 tools)
+│   ├── task_tools.py       # Task management (4 tools)
+│   ├── cron_tools.py       # Scheduled jobs (3 tools)
+│   ├── ask_user.py         # Interactive prompts (1 tool)
+│   ├── monitor.py          # Process monitoring (4 tools)
+│   ├── project_detect.py   # Project detection (1 tool)
+│   ├── mcp.py              # MCP protocol (2 tools)
+│   ├── data.py             # Database, CSV, JSON, YAML (16 tools)
+│   ├── network.py          # HTTP, DNS, ports, SSL, download (16 tools)
+│   ├── code_analysis.py    # Code search, AST, complexity, diff (16 tools)
+│   ├── docker_tools.py     # Docker container management (12 tools)
+│   ├── packages.py         # pip, npm, apt package management (12 tools)
+│   ├── text.py             # Text processing, encoding, hashing (21 tools)
+│   ├── system.py           # System info, processes, env vars (17 tools)
+│   ├── archive.py          # ZIP, tar, gzip, 7z (11 tools)
+│   ├── security.py         # Security scanning, crypto, secrets (12 tools)
+│   ├── cloud.py            # SSH, SCP, rsync, AWS/GCP/Azure/k8s (10 tools)
+│   ├── workflow.py         # Pipelines, logging, config, retry (12 tools)
+│   ├── notify.py           # Email, Telegram, Discord, Slack, ntfy (9 tools)
+│   ├── math_tools.py       # Math, statistics, unit conversion (13 tools)
+│   ├── ai_tools.py         # AI summarization, translation, analysis (12 tools)
+│   ├── regex_tools.py      # Regex testing, building, parsing (10 tools)
+│   └── tokenizer.py        # Token counting (utility)
 │
 └── web/                    # Web UI
     ├── server.py           # Flask + SocketIO backend
