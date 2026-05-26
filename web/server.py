@@ -665,7 +665,7 @@ def on_test_provider(data):
     try:
         resp = s.post(
             f"{base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json", "Accept-Encoding": "identity"},
             json={"model": model, "messages": [{"role": "user", "content": "hi"}], "max_tokens": 5},
             timeout=15,
         )
