@@ -40,6 +40,20 @@ socket.on("connected", (data) => {
             showThinking();
         }
     }
+    if (data.version) {
+        const verEl = document.getElementById("sidebar-version");
+        if (verEl) {
+            if (data.update_available) {
+                verEl.textContent = "v" + data.version + " (update tersedia)";
+                verEl.style.color = "var(--accent)";
+                verEl.style.opacity = "1";
+                verEl.style.cursor = "pointer";
+                verEl.onclick = doUpdate;
+            } else {
+                verEl.textContent = "v" + data.version;
+            }
+        }
+    }
     if (data.update_available) showUpdateToast();
 });
 
