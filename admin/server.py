@@ -119,7 +119,6 @@ def get_stats():
 
 
 @app.route("/admin")
-@require_admin
 def admin_dashboard():
     return ADMIN_HTML
 
