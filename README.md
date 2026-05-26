@@ -13,6 +13,13 @@
 
 <br>
 
+![Stars](https://img.shields.io/github/stars/mygeminim-source/KEYZBOT?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/mygeminim-source/KEYZBOT?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/mygeminim-source/KEYZBOT?style=for-the-badge)
+![Last Commit](https://img.shields.io/github/last-commit/mygeminim-source/KEYZBOT?style=for-the-badge)
+
+<br>
+
 Full-stack autonomous coding agent that runs natively on Android via Termux.
 
 **34 built-in tools. Web UI. Multi-provider. No API key needed to start.**
@@ -23,7 +30,7 @@ Full-stack autonomous coding agent that runs natively on Android via Termux.
 **[Features](#features)** &nbsp;&middot;&nbsp;
 **[Providers](#provider-management)** &nbsp;&middot;&nbsp;
 **[Tools](#tools)** &nbsp;&middot;&nbsp;
-**[Architecture](#architecture)**
+**[Contributors](#contributors)**
 
 </div>
 
@@ -45,6 +52,16 @@ Full-stack autonomous coding agent that runs natively on Android via Termux.
 | **Auto-Update** | Checks GitHub every 5 minutes. One-click update from Web UI or auto-pull in CLI. |
 | **Streaming Resilience** | Server continues processing even if client disconnects mid-stream. |
 | **CLI + Web** | Terminal or browser. Same engine, two interfaces. |
+
+---
+
+## Tech Stack
+
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-SocketIO-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/CI/CD-GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
 ---
 
@@ -241,19 +258,43 @@ KEYZBOT/
 
 ---
 
-## Auto-Update
+## Contributing
 
-KEYZBOT checks for updates on every launch and every 5 minutes:
+Contributions are welcome. Here's how:
 
-```
-[KEYZBOT] Checking for updates...
-[KEYZBOT] Updated! Restarting...
-```
+1. **Fork** this repository
+2. **Create** a feature branch (`git checkout -b feature/my-feature`)
+3. **Commit** your changes (`git commit -m "Add my feature"`)
+4. **Push** to the branch (`git push origin feature/my-feature`)
+5. **Open** a Pull Request
 
-- Fast-forward only (never overwrites local changes)
-- Auto-installs new dependencies if `requirements.txt` changed
-- Silent fallback if offline
-- Web UI toast with one-click "Update Now"
+### What to contribute
+
+- New tools or provider integrations
+- Bug fixes and performance improvements
+- Documentation and translations
+- UI/UX improvements
+- Test coverage
+
+---
+
+## Contributors
+
+<a href="https://github.com/mygeminim-source/KEYZBOT/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mygeminim-source/KEYZBOT" />
+</a>
+
+---
+
+## Star History
+
+<a href="https://star-history.com/#mygeminim-source/KEYZBOT&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mygeminim-source/KEYZBOT&type=Date" />
+ </picture>
+</a>
 
 ---
 
@@ -266,5 +307,7 @@ MIT License
 <div align="center">
 
 **Built by WAHYU FAOSZAN MUZAQI**
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mygeminim-source)
 
 </div>
