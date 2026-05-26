@@ -461,12 +461,14 @@ def on_delete_chat(data):
             bot.clear()
             user["chats"][chat_id]["name"] = "New Chat"
             user["chats"][chat_id]["messages_count"] = 0
+            config.delete_history(chat_id)
             web_sessions.save_session(sid, user)
             emit("chat_deleted", {"chats": _make_chat_summary(user), "active_chat": chat_id, "cleared": True})
             return
         del user["chats"][chat_id]
         if user["active_chat"] == chat_id:
             user["active_chat"] = list(user["chats"].keys())[0]
+        config.delete_history(chat_id)
         web_sessions.delete_chat(sid, chat_id)
         # Load messages of the new active chat
         new_active = user["active_chat"]
@@ -513,10 +515,11 @@ def on_user_message(data):
         cmd = text.split()[0].lower()
         result = _handle_command(sid, bot, text)
 
-        # /clear — reset sidebar chat name and message count
+        # /clear — reset sidebar chat name and message count, delete history file
         if cmd == "/clear":
             chat["name"] = "New Chat"
             chat["messages_count"] = 0
+            config.delete_history(user["active_chat"])
 
         # Sidebar commands emit ephemeral_result (auto-dismiss, not persisted)
         _EPHEMERAL_CMDS = {"/tools", "/skills", "/agents", "/browse", "/git", "/mcp",
@@ -1174,11 +1177,11 @@ def start_web(host="0.0.0.0", port=8080, open_browser=True):
     def _shutdown_handler(signum, frame):
         """Graceful shutdown — save state and exit."""
         print("\n  \033[93mShutting down gracefully...\033[0m")
-        # Save any pending state
+        # Save only chats with actual messages
         for sid, session in _user_sessions.items():
             for cid, chat in session.get("chats", {}).items():
                 agent = chat.get("agent")
-                if agent and agent.messages:
+                if agent and len(agent.messages) > 1:  # >1 because system prompt is always there
                     try:
                         config.save_history(cid, agent.messages)
                     except Exception:
@@ -1189,8 +1192,19 @@ def start_web(host="0.0.0.0", port=8080, open_browser=True):
     signal.signal(signal.SIGINT, _shutdown_handler)
     signal.signal(signal.SIGTERM, _shutdown_handler)
 
+    # Cleanup orphan history files at startup
+    def _cleanup_orphans():
+        all_chats = set()
+        for sid, session in web_sessions.load_sessions().items():
+            for cid in session.get("chats", {}).keys():
+                all_chats.add(cid)
+        cleaned = config.cleanup_orphan_history(all_chats)
+        if cleaned > 0:
+            print(f"  \033[90mCleaned {cleaned} orphan history file(s)\033[0m")
+    threading.Thread(target=_cleanup_orphans, daemon=True).start()
+
     print()
-    print(f"  \033[96m\033[1mKEYZBOT v9.0 Web Terminal\033[0m")
+    print(f"  \033[96m\033[1mKEYZBOT v9.1 Web Terminal\033[0m")
     print(f"  \033[90m{'━' * 40}\033[0m")
     print(f"  \033[92m●\033[0m Server running at \033[97m\033[1mhttp://localhost:{port}\033[0m")
     print(f"  \033[90mPress Ctrl+C to stop\033[0m\n")

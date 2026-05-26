@@ -290,9 +290,27 @@ def load_history(sid):
             return json.load(f)
     return None
 
+def delete_history(sid):
+    """Delete a single history file."""
+    p = HIST_DIR / f"{sid}.json"
+    if p.exists():
+        p.unlink()
+
 def list_history():
     HIST_DIR.mkdir(parents=True, exist_ok=True)
     return sorted(HIST_DIR.glob("*.json"), reverse=True)
+
+def cleanup_orphan_history(active_chat_ids):
+    """Delete history files that don't match any active chat ID."""
+    if not HIST_DIR.exists():
+        return 0
+    cleaned = 0
+    for f in HIST_DIR.glob("*.json"):
+        fid = f.stem
+        if fid not in active_chat_ids:
+            f.unlink()
+            cleaned += 1
+    return cleaned
 
 
 def auto_detect():
