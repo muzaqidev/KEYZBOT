@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-9.2-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.8+-green?style=for-the-badge)
-![Tools](https://img.shields.io/badge/tools-259-orange?style=for-the-badge)
+![Tools](https://img.shields.io/badge/tools-265-orange?style=for-the-badge)
 ![Tests](https://img.shields.io/badge/tests-95%20passed-brightgreen?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20Linux-lightgrey?style=for-the-badge)
@@ -24,7 +24,7 @@
 
 Full-stack autonomous coding agent that runs natively on Android via Termux.
 
-**259 built-in tools. Web UI. Multi-provider. No API key needed to start.**
+**265 built-in tools. Web UI. Multi-provider. No API key needed to start.**
 
 <br>
 
@@ -43,7 +43,7 @@ Full-stack autonomous coding agent that runs natively on Android via Termux.
 | Feature | Description |
 |---------|-------------|
 | **Zero Config** | OpenGateway pre-configured. Clone, install, run. No API key needed to start. |
-| **259 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
+| **265 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
 | **Multi-Provider** | Switch between OpenGateway, Groq, SambaNova, Cerebras, OpenRouter, or any OpenAI-compatible API. |
 | **Web UI** | Dark/light theme, streaming responses, chat history, tool panels, drag-and-drop file upload. |
 | **Multi-Chat** | Create, switch, rename, delete conversations. Full session persistence across refreshes. |
@@ -182,7 +182,7 @@ keyzbot /fork "refactor src"  # spawn sub-agent
 
 ## Tools
 
-259 built-in tools across 30 modules.
+265 built-in tools across 30 modules.
 
 | Category | Tools | Count |
 |----------|-------|-------|
@@ -245,7 +245,7 @@ KEYZBOT/
 │   ├── plugins.py          # Plugin loader
 │   └── ui.py               # Terminal UI helpers
 │
-├── tools/                  # 259 built-in tools (30 modules)
+├── tools/                  # 265 built-in tools (30 modules)
 │   ├── bash.py             # Shell execution (1 tool)
 │   ├── file_ops.py         # File operations (7 tools)
 │   ├── git_ops.py          # Git commands (1 tool)

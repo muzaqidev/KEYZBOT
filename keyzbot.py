@@ -7,13 +7,24 @@ Created by KEYZ — Feature-complete like OpenClaude
 import sys, os, time, json, threading, subprocess
 
 def _auto_update():
-    """Check GitHub for updates, pull and restart if newer version exists."""
+    """Check GitHub for updates, pull and restart if newer version exists.
+    Handles: username migration (mygeminim-source -> muzaqidev),
+    force-push divergence, and normal fast-forward updates."""
     repo_dir = os.path.dirname(os.path.abspath(__file__))
     git_dir = os.path.join(repo_dir, ".git")
     if not os.path.isdir(git_dir):
         return
     try:
-        # Fetch latest from remote (silent)
+        # --- Fix old username in remote URL ---
+        remote_url = subprocess.run(["git", "remote", "get-url", "origin"], cwd=repo_dir,
+                                    capture_output=True, text=True, timeout=5).stdout.strip()
+        if "mygeminim-source" in remote_url:
+            new_url = remote_url.replace("mygeminim-source", "muzaqidev")
+            subprocess.run(["git", "remote", "set-url", "origin", new_url], cwd=repo_dir,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            print(f"\033[93m[KEYZBOT] Remote updated to muzaqidev/KEYZBOT\033[0m")
+
+        # --- Fetch latest from remote (silent) ---
         subprocess.run(["git", "fetch", "--quiet"], cwd=repo_dir,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
         # Check if local is behind
@@ -23,18 +34,25 @@ def _auto_update():
                                 capture_output=True, text=True, timeout=10).stdout.strip()
         if not remote or local == remote:
             return
-        # Pull changes
+
+        # --- Try fast-forward pull first ---
         result = subprocess.run(["git", "pull", "--ff-only", "--quiet"], cwd=repo_dir,
                                 capture_output=True, text=True, timeout=60)
-        if result.returncode == 0:
-            # Check if requirements changed
-            req_result = subprocess.run(["git", "diff", "--name-only", local, remote],
-                                        cwd=repo_dir, capture_output=True, text=True, timeout=10)
-            if "requirements.txt" in req_result.stdout:
-                subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt", "-q"],
-                               cwd=repo_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
-            print(f"\033[93m[KEYZBOT] Updated! Restarting...\033[0m")
-            os.execv(sys.executable, [sys.executable] + sys.argv)
+        if result.returncode != 0:
+            # FF failed (diverged history from force-push). Hard reset to remote.
+            print(f"\033[93m[KEYZBOT] History diverged, syncing to latest...\033[0m")
+            subprocess.run(["git", "reset", "--hard", "origin/master"], cwd=repo_dir,
+                           capture_output=True, text=True, timeout=30)
+
+        # --- Check if requirements changed ---
+        req_result = subprocess.run(["git", "diff", "--name-only", local, remote],
+                                    cwd=repo_dir, capture_output=True, text=True, timeout=10)
+        if "requirements.txt" in req_result.stdout:
+            subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt", "-q"],
+                           cwd=repo_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
+
+        print(f"\033[93m[KEYZBOT] Updated! Restarting...\033[0m")
+        os.execv(sys.executable, [sys.executable] + sys.argv)
     except Exception:
         pass  # Silent fail — don't block startup
 
