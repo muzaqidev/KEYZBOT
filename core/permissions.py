@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-SETTINGS = Path.home() / ".openclaude" / "settings.json"
+SETTINGS = Path(__file__).parent.parent / "settings.json"
 
 # Default permission modes
 _MODES = {

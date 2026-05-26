@@ -3,7 +3,7 @@
 import json, subprocess, os, shlex
 from pathlib import Path
 
-SETTINGS = Path.home() / ".openclaude" / "settings.json"
+SETTINGS = Path(__file__).parent.parent / "settings.json"
 
 # ─── Hook Events ──────────────────────────────────────────────────────────────
 # pre_tool_call, post_tool_call, pre_prompt, post_response
