@@ -967,6 +967,7 @@ function scrollBottom(force) {
             _updateScrollBtn();
             return;
         }
+        if (force) _userScrolledUp = false;
         container.scrollTop = container.scrollHeight;
         _updateScrollBtn();
     });
