@@ -35,7 +35,7 @@ def _parse_media_result(result):
         return None
     try:
         data = json.loads(result)
-        if isinstance(data, dict) and data.get("type") in ("audio", "image", "video", "gif", "subtitle"):
+        if isinstance(data, dict) and data.get("type") in ("audio", "image", "video", "gif", "subtitle", "pdf"):
             path = data.get("path", "")
             if path and os.path.isfile(path):
                 filename = os.path.basename(path)

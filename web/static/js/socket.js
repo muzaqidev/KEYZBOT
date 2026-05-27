@@ -21,6 +21,7 @@ socket.on("connected", (data) => {
             else if (m.type === "bot") addBotMessage(m.text);
             else if (m.type === "tool_call") addToolCall(m.name, m.args);
             else if (m.type === "tool_result") addToolResultDirect(m.text);
+            else if (m.type === "media") renderMediaMessage(m.media);
         });
         scrollBottom();
     }
@@ -135,6 +136,7 @@ socket.on("chat_switched", (data) => {
                     }
                 } else { addToolResultDirect(m.text); }
             }
+            else if (m.type === "media") renderMediaMessage(m.media);
         });
     } else { showWelcome(); }
     scrollBottom();
@@ -152,6 +154,7 @@ socket.on("chat_deleted", (data) => {
             else if (m.type === "bot") addBotMessage(m.text);
             else if (m.type === "tool_call") addToolCall(m.name, m.args);
             else if (m.type === "tool_result") addToolResultDirect(m.text);
+            else if (m.type === "media") renderMediaMessage(m.media);
         });
         scrollBottom();
     } else { showWelcome(); }
@@ -223,38 +226,7 @@ socket.on("media_result", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
     removeThinking();
     _suppressThinking = true;
-    const m = data.media;
-    const row = document.createElement("div");
-    row.className = "msg-row bot media-msg";
-    let inner = "";
-    if (m.type === "audio") {
-        inner = '<div class="media-player audio-player">' +
-            '<div class="media-label">Audio</div>' +
-            '<audio controls preload="metadata" src="' + m.url + '"></audio>' +
-            '<a class="media-download" href="' + m.url + '" download="' + m.filename + '">Download</a>' +
-        '</div>';
-    } else if (m.type === "image") {
-        inner = '<div class="media-player image-player">' +
-            '<img src="' + m.url + '" alt="' + esc(m.prompt || m.kind || 'image') + '" loading="lazy" data-url="' + esc(m.url) + '">' +
-            '<a class="media-download" href="' + m.url + '" download="' + m.filename + '">Download</a>' +
-        '</div>';
-    } else if (m.type === "video" || m.type === "gif") {
-        var tag = m.type === "gif" ? "img" : "video";
-        var attrs = m.type === "gif" ? 'src="' + m.url + '"' : 'controls preload="metadata" src="' + m.url + '"';
-        inner = '<div class="media-player video-player">' +
-            '<div class="media-label">' + m.type.toUpperCase() + (m.resolution ? " " + m.resolution : "") + '</div>' +
-            '<' + tag + ' ' + attrs + '></' + tag + '>' +
-            '<a class="media-download" href="' + m.url + '" download="' + m.filename + '">Download</a>' +
-        '</div>';
-    } else if (m.type === "subtitle") {
-        inner = '<div class="media-player subtitle-player">' +
-            '<div class="media-label">Subtitles (.srt)</div>' +
-            '<pre class="media-subtitle-preview">' + esc(m.filename) + '</pre>' +
-            '<a class="media-download" href="' + m.url + '" download="' + m.filename + '">Download</a>' +
-        '</div>';
-    }
-    row.innerHTML = '<div class="msg-avatar">K</div><div class="msg-bubble">' + inner + '</div>';
-    messagesEl.appendChild(row);
+    renderMediaMessage(data.media);
     scrollBottom();
 });
 

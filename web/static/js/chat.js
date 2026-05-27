@@ -112,6 +112,53 @@ function addError(text) {
     messagesEl.appendChild(row);
 }
 
+// ─── Media Messages ─────────────────────────────────────────────────────────
+function renderMediaMessage(m) {
+    const row = document.createElement("div");
+    row.className = "msg-row bot media-msg";
+    let inner = "";
+    if (m.type === "audio") {
+        inner = '<div class="media-player audio-player">' +
+            '<div class="media-label">Audio</div>' +
+            '<audio controls preload="metadata" src="' + m.url + '"></audio>' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    } else if (m.type === "image") {
+        inner = '<div class="media-player image-player">' +
+            '<img src="' + m.url + '" alt="' + esc(m.prompt || m.kind || 'image') + '" loading="lazy" data-url="' + esc(m.url) + '">' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    } else if (m.type === "video" || m.type === "gif") {
+        var tag = m.type === "gif" ? "img" : "video";
+        var attrs = m.type === "gif" ? 'src="' + m.url + '"' : 'controls preload="metadata" src="' + m.url + '"';
+        inner = '<div class="media-player video-player">' +
+            '<div class="media-label">' + m.type.toUpperCase() + (m.resolution ? " " + m.resolution : "") + '</div>' +
+            '<' + tag + ' ' + attrs + '></' + tag + '>' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    } else if (m.type === "subtitle") {
+        inner = '<div class="media-player subtitle-player">' +
+            '<div class="media-label">Subtitles (.srt)</div>' +
+            '<pre class="media-subtitle-preview">' + esc(m.filename) + '</pre>' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    } else if (m.type === "pdf") {
+        inner = '<div class="media-player pdf-player">' +
+            '<div class="media-label">PDF</div>' +
+            '<iframe src="' + m.url + '" class="media-pdf-frame" loading="lazy"></iframe>' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    } else {
+        // Generic fallback
+        inner = '<div class="media-player">' +
+            '<div class="media-label">' + esc(m.type || 'File') + '</div>' +
+            '<a class="media-download" href="' + m.url + '" download="' + esc(m.filename) + '">Download</a>' +
+        '</div>';
+    }
+    row.innerHTML = '<div class="msg-avatar">K</div><div class="msg-bubble">' + inner + '</div>';
+    messagesEl.appendChild(row);
+}
+
 // ─── Tool Calls ──────────────────────────────────────────────────────────────
 function addToolCall(name, args) {
     if (toolCallEl && toolCallDone) {

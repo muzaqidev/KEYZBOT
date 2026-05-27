@@ -278,6 +278,7 @@ def serve_media(filepath):
         return "Not found", 404
     response = send_from_directory(media_dir, filepath)
     response.headers["Cache-Control"] = "public, max-age=3600"
+    response.headers["Content-Disposition"] = f"attachment; filename={filepath}"
     return response
 
 @app.route("/api/config")
@@ -294,7 +295,7 @@ def api_config():
     })
 
 def _build_messages_for_ui(bot):
-    """Extract messages from bot history for UI display, handling multimodal content."""
+    """Extract messages from bot history for UI display, handling multimodal content and media."""
     messages = []
     for m in bot.messages:
         if m["role"] == "system":
@@ -324,8 +325,42 @@ def _build_messages_for_ui(bot):
                 for t in tc:
                     messages.append({"type": "tool_call", "name": t["function"]["name"], "args": t["function"]["arguments"][:300]})
         elif m["role"] == "tool":
-            messages.append({"type": "tool_result", "text": m.get("content", "")[:2000]})
+            raw = m.get("content", "")
+            # Check if this tool result is a media JSON — emit as media message
+            media_info = _parse_media_for_ui(raw)
+            if media_info:
+                messages.append({"type": "media", "media": media_info})
+            else:
+                messages.append({"type": "tool_result", "text": raw[:2000]})
     return messages
+
+
+def _parse_media_for_ui(result):
+    """Parse media JSON from tool result for UI display on reload.
+    Similar to streaming._parse_media_result but for history replay."""
+    if not isinstance(result, str):
+        return None
+    try:
+        data = json.loads(result)
+        if isinstance(data, dict) and data.get("type") in ("audio", "image", "video", "gif", "subtitle", "pdf"):
+            path = data.get("path", "")
+            if path and os.path.isfile(path):
+                filename = os.path.basename(path)
+                return {
+                    "type": data["type"],
+                    "path": path,
+                    "filename": filename,
+                    "url": f"/media/{filename}",
+                    "format": data.get("format", ""),
+                    "text": data.get("text", ""),
+                    "prompt": data.get("prompt", ""),
+                    "kind": data.get("kind", ""),
+                    "duration": data.get("duration", 0),
+                    "resolution": data.get("resolution", ""),
+                }
+    except (json.JSONDecodeError, TypeError):
+        pass
+    return None
 
 @app.route("/api/export/<fmt>")
 def api_export(fmt):
