@@ -265,6 +265,19 @@ def _no_cache(response):
 def index():
     return send_from_directory(app.static_folder, "index.html")
 
+import mimetypes
+@app.route("/media/<path:filepath>")
+def serve_media(filepath):
+    """Serve generated media files (audio, images, video)."""
+    media_dir = os.path.join(os.path.expanduser("~"), ".keyzbot", "media")
+    full_path = os.path.join(media_dir, filepath)
+    if not os.path.isfile(full_path):
+        return "Not found", 404
+    mime = mimetypes.guess_type(full_path)[0] or "application/octet-stream"
+    response = send_from_directory(media_dir, filepath)
+    response.headers["Cache-Control"] = "public, max-age=3600"
+    return response
+
 @app.route("/api/config")
 def api_config():
     cfg = _enrich_config(config.get_or_create() or config.DEFAULTS.copy())

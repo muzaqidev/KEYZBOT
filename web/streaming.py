@@ -16,6 +16,34 @@ def safe_emit(event, data=None, to=None):
         pass
 
 
+def _parse_media_result(result):
+    """Check if tool result is a media JSON response from ai_media tools.
+    Returns dict with type, path, filename, url or None."""
+    if not isinstance(result, str):
+        return None
+    try:
+        data = json.loads(result)
+        if isinstance(data, dict) and data.get("type") in ("audio", "image", "video", "gif", "subtitle"):
+            path = data.get("path", "")
+            if path and os.path.isfile(path):
+                filename = os.path.basename(path)
+                return {
+                    "type": data["type"],
+                    "path": path,
+                    "filename": filename,
+                    "url": f"/media/{filename}",
+                    "format": data.get("format", ""),
+                    "text": data.get("text", ""),
+                    "prompt": data.get("prompt", ""),
+                    "kind": data.get("kind", ""),
+                    "duration": data.get("duration", 0),
+                    "resolution": data.get("resolution", ""),
+                }
+    except (json.JSONDecodeError, TypeError):
+        pass
+    return None
+
+
 def make_status(bot):
     """Build status dict from bot state."""
     from core import permissions
@@ -208,7 +236,13 @@ def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
                 except Exception: fargs = {}
                 safe_emit("tool_call", {"name": fname, "args": json.dumps(fargs, ensure_ascii=False)[:400], "chat_id": chat_id})
                 result = exec_tool(fname, fargs, bot.work_dir, bot)
-                if isinstance(result, dict) and result.get("type") == "image":
+                # Check if result is media JSON (from ai_media tools)
+                media_info = _parse_media_result(result)
+                if media_info:
+                    safe_emit("media_result", {"name": fname, "media": media_info, "chat_id": chat_id})
+                    safe_emit("tool_result", {"name": fname, "result": f"[{media_info['type'].upper()}: {media_info.get('filename', '')}]", "chat_id": chat_id})
+                    bot.messages.append({"role": "tool", "tool_call_id": tc["id"], "content": result or "(no output)"})
+                elif isinstance(result, dict) and result.get("type") == "image":
                     safe_emit("tool_result", {"name": fname, "result": f"[Image: {result.get('filename', '?')} ({result.get('size_kb', 0)} KB)]", "chat_id": chat_id})
                     bot.messages.append({
                         "role": "tool", "tool_call_id": tc["id"],

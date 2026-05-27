@@ -6,9 +6,9 @@
 
 <br>
 
-![Version](https://img.shields.io/badge/version-9.3-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-10.0-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.8+-green?style=for-the-badge)
-![Tools](https://img.shields.io/badge/tools-265-orange?style=for-the-badge)
+![Tools](https://img.shields.io/badge/tools-377-orange?style=for-the-badge)
 ![Tests](https://img.shields.io/badge/tests-95%20passed-brightgreen?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-purple?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20Linux-lightgrey?style=for-the-badge)
@@ -24,7 +24,7 @@
 
 Full-stack autonomous coding agent that runs natively on Android via Termux.
 
-**265 built-in tools. Web UI. Multi-provider. No API key needed to start.**
+**377 built-in tools. Web UI. Multi-provider. No API key needed to start.**
 
 <br>
 
@@ -43,7 +43,7 @@ Full-stack autonomous coding agent that runs natively on Android via Termux.
 | Feature | Description |
 |---------|-------------|
 | **Zero Config** | OpenGateway pre-configured. Clone, install, run. No API key needed to start. |
-| **265 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
+| **377 Built-in Tools** | Bash, file ops, git, web search, image analysis, scheduling, GitHub API, and more. |
 | **Multi-Provider** | Switch between OpenGateway, Groq, SambaNova, Cerebras, OpenRouter, or any OpenAI-compatible API. |
 | **Web UI** | Dark/light theme, streaming responses, chat history, tool panels, drag-and-drop file upload. |
 | **Multi-Chat** | Create, switch, rename, delete conversations. Full session persistence across refreshes. |
@@ -182,7 +182,7 @@ keyzbot /fork "refactor src"  # spawn sub-agent
 
 ## Tools
 
-265 built-in tools across 30 modules.
+377 built-in tools across 39 modules.
 
 | Category | Tools | Count |
 |----------|-------|-------|
@@ -214,6 +214,15 @@ keyzbot /fork "refactor src"  # spawn sub-agent
 | **Interaction** | `ask_user` | 1 |
 | **MCP** | `mcp_list` `mcp_call` | 2 |
 | **Monitoring** | `monitor_start` `monitor_status` `monitor_output` `monitor_stop` | 4 |
+| **Browser** | `browser_screenshot` `browser_pdf` `browser_extract` `browser_links` `browser_images` `browser_meta` `browser_status` `browser_headers` `browser_cookies` `browser_performance` | 10 |
+| **PDF** | `pdf_read` `pdf_info` `pdf_merge` `pdf_split` `pdf_extract_pages` `pdf_remove_pages` `pdf_rotate` `pdf_watermark` `pdf_images` `pdf_to_text` `text_to_pdf` `pdf_page_count` | 12 |
+| **Spreadsheet** | `sheet_read` `sheet_write` `sheet_filter` `sheet_sort` `sheet_aggregate` `sheet_pivot` `sheet_columns` `sheet_row_count` `sheet_find` `sheet_add_column` `sheet_merge` `sheet_dedup` `sheet_sample` | 13 |
+| **Mock Data** | `generate_names` `generate_emails` `generate_phones` `generate_addresses` `generate_lorem` `generate_numbers` `generate_dates` `generate_users` `generate_passwords` `generate_json` `generate_csv` `generate_uuids` `generate_ips` `generate_urls` `generate_colors` `generate_words` | 16 |
+| **Clipboard** | `clipboard_set` `clipboard_get` `snippet_save` `snippet_load` `snippet_list` `snippet_delete` `bookmark_save` `bookmark_list` `bookmark_delete` `note_save` `note_list` `note_search` | 12 |
+| **Tunnel** | `ngrok_start` `ngrok_stop` `ngrok_status` `lt_start` `lt_stop` `ssh_tunnel_start` `ssh_tunnel_stop` `proxy_start` `proxy_stop` `serve_static` | 10 |
+| **Health** | `health_http` `health_tcp` `health_dns` `health_ssl` `health_disk` `health_memory` `health_cpu` `health_process` `health_service` `health_url_chain` `uptime_monitor` `health_report` | 12 |
+| **Doc Gen** | `generate_api_docs` `generate_tree_docs` `generate_class_docs` `generate_rest_api` `generate_diagram` `generate_changelog` `generate_contributing` `generate_license` `generate_env_docs` `generate_test_docs` `generate_deps_docs` `generate_wiki` | 12 |
+| **AI Media** | `tts_generate` `tts_voices` `image_generate` `image_edit` `video_generate` `video_from_text` `audio_generate` `audio_mix` `gif_generate` `subtitle_generate` `sticker_generate` `thumbnail_generate` `watermark_add` `image_collage` `barcode_generate` | 15 |
 
 ---
 
@@ -245,7 +254,7 @@ KEYZBOT/
 │   ├── plugins.py          # Plugin loader
 │   └── ui.py               # Terminal UI helpers
 │
-├── tools/                  # 265 built-in tools (30 modules)
+├── tools/                  # 377 built-in tools (39 modules)
 │   ├── bash.py             # Shell execution (1 tool)
 │   ├── file_ops.py         # File operations (7 tools)
 │   ├── git_ops.py          # Git commands (1 tool)

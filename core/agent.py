@@ -14,6 +14,7 @@ def _build_tools():
     from tools import project_detect, lint_test, github, doc_reader
     from tools import data, network, code_analysis, docker_tools, packages, text, system, archive
     from tools import security, media, cloud, workflow, notify, math_tools, ai_tools, regex_tools, git_advanced
+    from tools import browser, pdf_tools, spreadsheet, mockdata, clipboard, tunnel, healthcheck, docgen, ai_media
     tools = [bash.TOOL_DEF]
     tools.extend(file_ops.TOOL_DEFS)
     tools.extend(web.TOOL_DEFS)
@@ -47,6 +48,16 @@ def _build_tools():
     tools.extend(ai_tools.TOOL_DEFS)
     tools.extend(regex_tools.TOOL_DEFS)
     tools.extend(git_advanced.TOOL_DEFS)
+    # New tool modules — phase 2 (8 modules)
+    tools.extend(browser.TOOL_DEFS)
+    tools.extend(pdf_tools.TOOL_DEFS)
+    tools.extend(spreadsheet.TOOL_DEFS)
+    tools.extend(mockdata.TOOL_DEFS)
+    tools.extend(clipboard.TOOL_DEFS)
+    tools.extend(tunnel.TOOL_DEFS)
+    tools.extend(healthcheck.TOOL_DEFS)
+    tools.extend(docgen.TOOL_DEFS)
+    tools.extend(ai_media.TOOL_DEFS)
     # Add agent-level tools
     tools.extend(_AGENT_TOOL_DEFS)
     return tools

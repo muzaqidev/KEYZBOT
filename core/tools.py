@@ -5,6 +5,7 @@ from tools import bash, file_ops, web, notebook, monitor, image, git_ops, mcp, a
 from tools import project_detect, lint_test, github, doc_reader
 from tools import data, network, code_analysis, docker_tools, packages, text, system, archive
 from tools import security, media, cloud, workflow, notify, math_tools, ai_tools, regex_tools, git_advanced
+from tools import browser, pdf_tools, spreadsheet, mockdata, clipboard, tunnel, healthcheck, docgen, ai_media
 from . import plugins
 
 # Registry of all tool modules with their TOOL_NAMES
@@ -18,6 +19,9 @@ _TOOL_MODULES = [
     (security, None), (media, None), (cloud, None), (workflow, None),
     (notify, None), (math_tools, None), (ai_tools, None), (regex_tools, None),
     (git_advanced, None),
+    (browser, None), (pdf_tools, None), (spreadsheet, None), (mockdata, None),
+    (clipboard, None), (tunnel, None), (healthcheck, None), (docgen, None),
+    (ai_media, None),
 ]
 
 def _build_module_map():
