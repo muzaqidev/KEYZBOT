@@ -16,9 +16,17 @@ socket.on("connected", (data) => {
     isStreaming = false; hadStream = false;
     _suppressThinking = false;
     removeThinking();
+    // ALWAYS clear DOM first to prevent double messages from rapid reconnects
+    clearMessages();
+    // Show thinking IMMEDIATELY if stream is active (before message rendering)
+    if (data.streaming) {
+        isStreaming = true; hadStream = true;
+        streamRawText = data.stream_text || "";
+        addThinking();
+    }
     // Render messages for active chat
     if (data.messages && data.messages.length > 0) {
-        clearMessages(); hideWelcome();
+        hideWelcome();
         try {
             data.messages.forEach(m => {
                 if (m.type === "user") addUserMessage(m.text, m.images);
@@ -29,14 +37,13 @@ socket.on("connected", (data) => {
             });
         } catch (e) { console.warn("Message render error:", e); }
         scrollBottom();
+    } else if (data.streaming) {
+        hideWelcome();
     }
-    // Restore streaming/thinking state AFTER messages render
-    if (data.streaming) {
-        isStreaming = true; hadStream = true;
-        streamRawText = data.stream_text || "";
-        addThinking();
-    } else if (data.stream_done && data.stream_text && data.stream_text.length > 0) {
-        // Stream finished while we were disconnected — show final text
+    // Handle stream done after reconnect — only if last message isn't already the bot reply
+    const _lastMsg = data.messages && data.messages.length > 0 ? data.messages[data.messages.length - 1] : null;
+    const _alreadyRendered = _lastMsg && _lastMsg.type === "bot";
+    if (data.stream_done && data.stream_text && data.stream_text.length > 0 && !_alreadyRendered) {
         hideWelcome();
         addBotMessage(data.stream_text);
         scrollBottom();

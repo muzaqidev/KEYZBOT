@@ -6,7 +6,8 @@ const IMG_MAX = 1024;
 function hideWelcome() { if (welcomeEl) welcomeEl.style.display = "none"; }
 function showWelcome() { if (welcomeEl) welcomeEl.style.display = "flex"; }
 function clearMessages() {
-    messagesEl.querySelectorAll(".msg-row, .tool-accordion, .msg-ephemeral").forEach(r => r.remove());
+    messagesEl.querySelectorAll(".msg-row, .tool-accordion, .msg-ephemeral, .thinking").forEach(r => r.remove());
+    thinkingEl = null;
     _userScrolledUp = false;
     const sbb = document.getElementById('scroll-bottom-btn');
     if (sbb) sbb.classList.remove('visible');
