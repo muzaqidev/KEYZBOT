@@ -1,10 +1,12 @@
 /* KEYZBOT Socket Events — all socket.on handlers */
+let _suppressThinking = false;
 
 // ─── Socket Events ───────────────────────────────────────────────────────────
 socket.on("connected", (data) => {
     statusBar.textContent = "Connected";
     activeChatId = data.active_chat;
     userProfile = data.profile || {};
+    _suppressThinking = false;
     updateSidebarUserName();
     renderSessions(data.chats);
     fetchConfig();
@@ -23,11 +25,9 @@ socket.on("connected", (data) => {
         scrollBottom();
     }
     if (data.streaming) {
-        // AI still processing — just show thinking animation
         isStreaming = true; hadStream = true;
         addThinking();
     } else if (data.stream_done && data.stream_text && data.stream_text.length > 0) {
-        // Stream finished while disconnected — render final text
         hideWelcome();
         addBotMessage(data.stream_text);
         scrollBottom();
@@ -174,12 +174,12 @@ socket.on("ephemeral_result", (data) => {
 
 socket.on("thinking", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
-    if (data.active) addThinking();
+    if (data.active && !_suppressThinking) addThinking();
 });
 
 socket.on("chat_start", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
-    hideWelcome(); removeThinking();
+    hideWelcome(); removeThinking(); _suppressThinking = false;
     hadStream = false; isStreaming = true;
     addUserMessage(data.user, data.images);
     scrollBottom();
@@ -215,12 +215,14 @@ socket.on("tool_call", (data) => {
 
 socket.on("tool_result", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
-    addToolResult(data.name, data.result); scrollBottom();
+    removeThinking(); addToolResult(data.name, data.result); scrollBottom();
 });
 
 // ─── Media Result ─────────────────────────────────────────────────────────
 socket.on("media_result", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
+    removeThinking();
+    _suppressThinking = true;
     const m = data.media;
     const row = document.createElement("div");
     row.className = "msg-row bot media-msg";
@@ -258,9 +260,11 @@ socket.on("media_result", (data) => {
 
 socket.on("chat_done", (data) => {
     if (data.chat_id && data.chat_id !== activeChatId) return;
-    if (!hadStream && data.text) { removeThinking(); addBotMessage(data.text); }
+    removeThinking();
+    if (!hadStream && data.text) { addBotMessage(data.text); }
     isStreaming = false;
     hadStream = false;
+    _suppressThinking = false;
     streamEl = null; streamContentEl = null; streamRawText = "";
     sendBtn.disabled = !input.value.trim();
     scrollBottom();
