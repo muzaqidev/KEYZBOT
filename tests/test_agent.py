@@ -9,7 +9,7 @@ from core import agent
 def test_build_tools_returns_list():
     tools = agent._build_tools()
     assert isinstance(tools, list)
-    assert len(tools) >= 30  # 34 tools expected
+    assert len(tools) >= 350  # 377 tools expected in v10.2
 
 
 def test_build_tools_has_bash():

@@ -16,7 +16,7 @@ def test_get_all_tool_names():
     assert "web_search" in names
     assert "web_fetch" in names
     assert "git" in names
-    assert len(names) >= 20
+    assert len(names) >= 350
 
 def test_execute_bash():
     result = tools.execute("bash", {"command": "echo hello"})
@@ -48,8 +48,8 @@ def test_execute_list_dir():
 
 def test_tool_count():
     names = tools.get_all_tool_names()
-    # Should have at least 25 tools
-    assert len(names) >= 25
+    # Should have at least 350 tools (v10.2 has 377)
+    assert len(names) >= 350
 
 def test_execute_write_and_read(tmp_path):
     test_file = str(tmp_path / "test_write.txt")

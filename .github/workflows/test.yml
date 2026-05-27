@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,8 +28,10 @@ jobs:
 
       - name: Syntax check
         run: |
-          python -m py_compile keyzbot.py
           python -m py_compile core/config.py
+          python -m py_compile web/server.py
+          python -m py_compile web/streaming.py
+          python -m py_compile web/commands.py
           python -c "import core"
           python -c "import tools"
 

@@ -3,3 +3,5 @@ PySocks
 flask
 flask-socketio
 pytest
+# Optional — accurate token counting (fallback: len//4)
+# tiktoken

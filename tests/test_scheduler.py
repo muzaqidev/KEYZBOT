@@ -38,9 +38,13 @@ def test_should_fire_specific_minute():
 
 
 def test_should_fire_step():
+    """Test */5 cron expression fires at multiples of 5."""
     now = time.localtime()
-    if now.tm_min % 5 == 0:
-        assert scheduler.should_fire("*/5 * * * *", now) is True
+    # Always verify: minute 0 must match */5, minute 1 must not
+    t_at_0 = time.struct_time((now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, 0, now.tm_sec, now.tm_wday, now.tm_yday, now.tm_isdst))
+    t_at_1 = time.struct_time((now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, 1, now.tm_sec, now.tm_wday, now.tm_yday, now.tm_isdst))
+    assert scheduler.should_fire("*/5 * * * *", t_at_0) is True
+    assert scheduler.should_fire("*/5 * * * *", t_at_1) is False
 
 
 def test_should_fire_range():
