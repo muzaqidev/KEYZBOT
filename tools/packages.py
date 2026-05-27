@@ -1,6 +1,6 @@
 """Package management tools for pip, npm, apt, and system packages."""
 
-import subprocess, json, os
+import subprocess
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "pip_install", "description": "Install Python packages using pip.", "parameters": {"type": "object", "properties": {"packages": {"type": "string", "description": "Package name(s) to install (space-separated)"}, "upgrade": {"type": "boolean", "description": "Upgrade if already installed (default false)"}, "requirements": {"type": "string", "description": "Path to requirements.txt file"}}, "required": []}}},

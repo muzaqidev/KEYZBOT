@@ -2,7 +2,6 @@
 
 import time
 from collections import defaultdict
-from functools import wraps
 
 class RateLimiter:
     """Simple in-memory rate limiter."""

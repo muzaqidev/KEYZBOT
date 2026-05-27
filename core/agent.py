@@ -362,7 +362,7 @@ class Agent:
                 content = m.get("content", "") or ""
                 if role == "tool":
                     if isinstance(content, list):
-                        summary_parts.append(f"[tool result]: [multimodal content]")
+                        summary_parts.append("[tool result]: [multimodal content]")
                     else:
                         summary_parts.append(f"[tool result]: {content[:100]}")
                 elif m.get("tool_calls"):
@@ -413,13 +413,11 @@ class Agent:
             spinner.stop()
 
             full_text = ""
-            tool_calls = []
             tool_call_buf = {}
             has_content = False
             line_buf = []
             started_label = False
             indent = "    "
-            max_content_w = ui.width() - len(indent) - 2
 
             for raw_line in resp.iter_lines(decode_unicode=True):
                 if not raw_line or not raw_line.startswith("data: "):

@@ -1,6 +1,6 @@
 """Sandbox mode for safe bash execution."""
 
-import re, os
+import re
 
 # Dangerous patterns that should be blocked in sandbox mode
 BLOCKED_PATTERNS = [

@@ -1,6 +1,6 @@
 """Image tool — read images as base64 for multimodal analysis."""
 
-import base64, os
+import base64
 from pathlib import Path
 
 EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".svg"}

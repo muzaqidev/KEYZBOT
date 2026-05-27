@@ -1,6 +1,6 @@
 """Memory system — persistent context across sessions."""
 
-import os, re, time
+import re, time
 from pathlib import Path
 
 DIR = Path(__file__).parent.parent / "memory"

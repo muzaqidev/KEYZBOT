@@ -50,7 +50,6 @@ def execute(name, args, work_dir=None):
 
         elif name == "dns_lookup":
             domain = args["domain"]
-            rtype = args.get("record_type", "ALL").upper()
             result = subprocess.run(["nslookup", domain], capture_output=True, text=True, timeout=10)
             return result.stdout or result.stderr or "(no result)"
 

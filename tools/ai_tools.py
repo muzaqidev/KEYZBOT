@@ -1,6 +1,6 @@
 """AI and LLM utility tools — summarization, translation, analysis via local/provider APIs."""
 
-import os, json
+import os
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "text_summarize", "description": "Summarize a long text into key points.", "parameters": {"type": "object", "properties": {"text": {"type": "string", "description": "Text to summarize"}, "max_sentences": {"type": "integer", "description": "Max sentences in summary (default 5)"}}, "required": ["text"]}}},

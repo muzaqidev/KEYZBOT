@@ -1,6 +1,6 @@
 """System information and process management tools."""
 
-import subprocess, os, platform, json, signal
+import subprocess, os, platform, signal
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "sys_info", "description": "Get system information: OS, CPU, memory, disk, Python version.", "parameters": {"type": "object", "properties": {}, "required": []}}},
@@ -81,7 +81,6 @@ def execute(name, args, work_dir=None):
                         parts = line.split()
                         info[parts[0].rstrip(":")] = int(parts[1])
                 total = info.get("MemTotal", 0) // 1024
-                free = info.get("MemFree", 0) // 1024
                 available = info.get("MemAvailable", 0) // 1024
                 buffers = info.get("Buffers", 0) // 1024
                 cached = info.get("Cached", 0) // 1024

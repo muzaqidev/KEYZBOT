@@ -1,6 +1,5 @@
 """Accurate token counting using tiktoken."""
 
-import os
 
 _tiktoken = None
 _encoding = None

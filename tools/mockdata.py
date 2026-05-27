@@ -1,6 +1,6 @@
 """Mock data generation tools — names, addresses, lorem ipsum, test data."""
 
-import random, string, json, os, hashlib, time
+import random, string, json, csv
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "generate_names", "description": "Generate random realistic names.", "parameters": {"type": "object", "properties": {"count": {"type": "integer", "description": "Number of names (default 10)"}, "format": {"type": "string", "enum": ["full", "first", "last", "username"], "description": "Name format (default full)"}, "gender": {"type": "string", "enum": ["male", "female", "any"], "description": "Gender (default any)"}}, "required": []}}},

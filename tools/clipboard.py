@@ -130,7 +130,7 @@ def execute(name, args, work_dir=None):
             if args["url"] in bookmarks:
                 del bookmarks[args["url"]]
                 _save_json(_BOOKMARKS_FILE, bookmarks)
-                return f"Deleted bookmark"
+                return "Deleted bookmark"
             return "Bookmark not found"
 
         elif name == "note_save":

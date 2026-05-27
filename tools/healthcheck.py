@@ -1,6 +1,6 @@
 """Health check and service monitoring tools."""
 
-import subprocess, os, json, time, socket
+import subprocess, os, time, socket
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "health_http", "description": "Check HTTP endpoint health — status, response time, content validation.", "parameters": {"type": "object", "properties": {"url": {"type": "string", "description": "URL to check"}, "expected_status": {"type": "integer", "description": "Expected HTTP status (default 200)"}, "expected_text": {"type": "string", "description": "Text that must be in response body"}, "timeout": {"type": "integer", "description": "Timeout seconds (default 10)"}}, "required": ["url"]}}},

@@ -1,6 +1,6 @@
 """Sub-agents — fork/spawn specialized agents with shared context."""
 
-import json, time, threading, os, sys, requests
+import json, time, threading, requests
 
 # Agent types matching OpenClaude
 AGENT_TYPES = {

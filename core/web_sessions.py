@@ -1,6 +1,6 @@
 """Persistent storage for web chat sessions."""
 
-import json, os, time
+import json, time
 from pathlib import Path
 
 _DIR = Path(__file__).parent.parent

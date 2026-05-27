@@ -1,6 +1,6 @@
 """Advanced Git tools — beyond basic operations."""
 
-import subprocess, os, json
+import subprocess, os
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "git_blame", "description": "Show who last modified each line of a file.", "parameters": {"type": "object", "properties": {"file": {"type": "string", "description": "File path"}, "line_range": {"type": "string", "description": "Line range (e.g. '10-20')"}}, "required": ["file"]}}},
@@ -93,7 +93,7 @@ def execute(name, args, work_dir=None):
 
         elif name == "git_file_history":
             limit = args.get("limit", 20)
-            r = run(["git", "log", f"--oneline", f"-{limit}", "--follow", args["file"]])
+            r = run(["git", "log", "--oneline", f"-{limit}", "--follow", args["file"]])
             return r.stdout or "(no history)"
 
         elif name == "git_restore":

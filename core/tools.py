@@ -1,6 +1,6 @@
 """Centralized tool router — shared by CLI and web server."""
 
-import json, time
+import time
 from tools import bash, file_ops, web, notebook, monitor, image, git_ops, mcp, ask_user, task_tools, cron_tools
 from tools import project_detect, lint_test, github, doc_reader
 from tools import data, network, code_analysis, docker_tools, packages, text, system, archive

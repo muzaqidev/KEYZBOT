@@ -7,12 +7,24 @@ services:
       - keyzbot-data:/app/data
       - keyzbot-history:/app/history
       - keyzbot-memory:/app/memory
+      - keyzbot-plans:/app/plans
     environment:
       - KEYZBOT_TOKEN=${KEYZBOT_TOKEN:-}
       - KEYZBOT_SECRET=${KEYZBOT_SECRET:-}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/api/config')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
 
 volumes:
   keyzbot-data:
   keyzbot-history:
   keyzbot-memory:
+  keyzbot-plans:

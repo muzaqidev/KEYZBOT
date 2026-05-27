@@ -1,6 +1,6 @@
 """Documentation generation tools — API docs, diagrams, wikis, README."""
 
-import subprocess, os, json, re
+import os, json, re
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "generate_api_docs", "description": "Generate API documentation from source code or OpenAPI spec.", "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "Source file or directory"}, "format": {"type": "string", "enum": ["markdown", "html", "json"], "description": "Output format (default markdown)"}, "style": {"type": "string", "enum": ["rest", "flask", "fastapi", "express", "auto"], "description": "Framework style (default auto)"}}, "required": ["path"]}}},
@@ -143,7 +143,7 @@ def execute(name, args, work_dir=None):
             dtype = args["type"]
             path = args["path"]
             output = args.get("output", "")
-            lines = [f"```mermaid"]
+            lines = ["```mermaid"]
             if dtype == "flowchart":
                 lines.append("graph TD")
                 # Simple file dependency flow

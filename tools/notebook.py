@@ -1,6 +1,6 @@
 """Notebook tool — read/write/execute Jupyter .ipynb files."""
 
-import json, os
+import json
 from pathlib import Path
 
 TOOL_DEFS = [

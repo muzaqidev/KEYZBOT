@@ -1,6 +1,6 @@
 """Scheduler — cron-like recurring and one-shot tasks."""
 
-import json, time, threading, re
+import json, time
 from pathlib import Path
 
 FILE = Path(__file__).parent.parent / "plans" / "scheduled.json"

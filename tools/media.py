@@ -1,6 +1,6 @@
 """Media processing tools — image, video, audio."""
 
-import subprocess, os, json, base64
+import subprocess, os, json
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "image_resize", "description": "Resize an image to specified dimensions.", "parameters": {"type": "object", "properties": {"input": {"type": "string", "description": "Input image path"}, "output": {"type": "string", "description": "Output image path"}, "width": {"type": "integer", "description": "Target width"}, "height": {"type": "integer", "description": "Target height"}, "quality": {"type": "integer", "description": "JPEG quality 1-100 (default 85)"}}, "required": ["input", "output"]}}},

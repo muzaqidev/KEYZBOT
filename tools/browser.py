@@ -1,6 +1,6 @@
 """Headless browser automation tools — screenshot, scrape, fill forms, interact."""
 
-import subprocess, os, json, base64, time
+import subprocess, os, json, time
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "browser_screenshot", "description": "Take a screenshot of a webpage using headless browser. Returns image path.", "parameters": {"type": "object", "properties": {"url": {"type": "string", "description": "URL to screenshot"}, "output": {"type": "string", "description": "Output image path"}, "width": {"type": "integer", "description": "Viewport width (default 1280)"}, "height": {"type": "integer", "description": "Viewport height (default 720)"}, "full_page": {"type": "boolean", "description": "Capture full page scroll (default false)"}, "wait": {"type": "integer", "description": "Wait seconds after load (default 2)"}}, "required": ["url", "output"]}}},
@@ -66,7 +66,7 @@ def execute(name, args, work_dir=None):
             resp = requests.get(url, timeout=15)
             with open(output.replace('.png', '.html'), 'w') as f:
                 f.write(resp.text)
-            return f"Playwright/Puppeteer not available. Saved HTML instead."
+            return "Playwright/Puppeteer not available. Saved HTML instead."
 
         elif name == "browser_pdf":
             url = args["url"]

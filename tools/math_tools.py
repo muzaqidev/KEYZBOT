@@ -1,6 +1,6 @@
 """Math, statistics, and calculation tools."""
 
-import math, json, statistics, re
+import math, statistics, re
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "calculate", "description": "Evaluate a math expression. Supports +, -, *, /, **, sqrt, sin, cos, tan, log, pi, e.", "parameters": {"type": "object", "properties": {"expression": {"type": "string", "description": "Math expression (e.g. '2**10', 'sqrt(144)', 'sin(pi/2)')"}}, "required": ["expression"]}}},

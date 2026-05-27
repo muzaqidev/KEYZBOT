@@ -409,7 +409,6 @@ def _grep(args, work_dir=None):
 
 def _tree(args):
     """Show directory tree structure."""
-    import fnmatch
     path = args.get("path", ".")
     max_depth = args.get("depth", 3)
     show_hidden = args.get("hidden", False)

@@ -1,8 +1,8 @@
 """KEYZBOT streaming chat engine — extracted from server.py."""
 
-import json, time, os, sys
+import json, time, os
 from flask_socketio import emit
-from core import config, agent, web_sessions, subagents
+from core import web_sessions, subagents
 
 _socketio = None
 

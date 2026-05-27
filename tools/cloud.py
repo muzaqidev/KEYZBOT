@@ -1,6 +1,6 @@
 """Cloud and DevOps tools — SSH, SCP, rsync, cloud CLIs."""
 
-import subprocess, os, json
+import subprocess
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "ssh_exec", "description": "Execute a command on a remote server via SSH.", "parameters": {"type": "object", "properties": {"host": {"type": "string", "description": "user@host"}, "command": {"type": "string", "description": "Command to execute"}, "key": {"type": "string", "description": "SSH key file path"}, "port": {"type": "integer", "description": "SSH port (default 22)"}, "timeout": {"type": "integer", "description": "Timeout in seconds (default 30)"}}, "required": ["host", "command"]}}},

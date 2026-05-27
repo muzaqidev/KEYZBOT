@@ -1,6 +1,6 @@
 """PDF manipulation tools — read, merge, split, watermark, convert, extract."""
 
-import subprocess, os, json
+import subprocess, os
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "pdf_read", "description": "Read text content from a PDF file. Supports page ranges.", "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "PDF file path"}, "pages": {"type": "string", "description": "Page range (e.g. '1-5', '3', '1,3,5')"}}, "required": ["path"]}}},

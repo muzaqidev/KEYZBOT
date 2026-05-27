@@ -1,6 +1,6 @@
 """Skills system — custom slash commands."""
 
-import os, json, subprocess
+import json
 from pathlib import Path
 
 # Built-in skills (like OpenClaude)

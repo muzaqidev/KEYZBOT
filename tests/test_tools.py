@@ -2,7 +2,6 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import pytest
 from core import tools
 
 def test_get_all_tool_names():
@@ -62,7 +61,7 @@ def test_execute_edit_file(tmp_path):
     test_file = str(tmp_path / "test_edit.txt")
     with open(test_file, "w") as f:
         f.write("old content here")
-    result = tools.execute("edit_file", {"path": test_file, "old_string": "old content", "new_string": "new content"})
+    tools.execute("edit_file", {"path": test_file, "old_string": "old content", "new_string": "new content"})
     with open(test_file) as f:
         assert "new content" in f.read()
 

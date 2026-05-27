@@ -1,6 +1,6 @@
 """Tunnel and proxy tools — expose local ports, ngrok, localtunnel, HTTP proxy."""
 
-import subprocess, os, json, time, signal
+import subprocess, time
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "ngrok_start", "description": "Start an ngrok tunnel to expose a local port publicly.", "parameters": {"type": "object", "properties": {"port": {"type": "integer", "description": "Local port to expose"}, "protocol": {"type": "string", "enum": ["http", "tcp", "tls"], "description": "Protocol (default http)"}, "region": {"type": "string", "enum": ["us", "eu", "au", "ap", "sa", "jp", "in"], "description": "Region (default us)"}}, "required": ["port"]}}},

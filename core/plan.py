@@ -1,6 +1,6 @@
 """Plan mode — explore and design before implementation."""
 
-import os, time, json
+import os, time
 from pathlib import Path
 
 DIR = Path(__file__).parent.parent / "plans"

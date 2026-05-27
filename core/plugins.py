@@ -1,7 +1,6 @@
 """Plugin loader — dynamic tool discovery from plugins/ directory."""
 
 import importlib.util
-import os
 from pathlib import Path
 
 PLUGINS_DIR = Path(__file__).parent.parent / "plugins"

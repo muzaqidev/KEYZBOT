@@ -1,6 +1,6 @@
 """Spreadsheet tools — read, write, calculate, filter CSV/Excel files."""
 
-import csv, json, os, io
+import csv
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "sheet_read", "description": "Read a spreadsheet (CSV/XLSX) and return rows as structured data.", "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "File path (.csv or .xlsx)"}, "sheet": {"type": "string", "description": "Sheet name for XLSX (default first)"}, "limit": {"type": "integer", "description": "Max rows (default 100)"}, "offset": {"type": "integer", "description": "Skip N rows (default 0)"}}, "required": ["path"]}}},

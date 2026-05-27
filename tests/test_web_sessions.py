@@ -1,10 +1,9 @@
 """Test web_sessions module — persistent session storage."""
-import sys, os, json
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 from core import web_sessions
-from pathlib import Path
 
 
 @pytest.fixture(autouse=True)

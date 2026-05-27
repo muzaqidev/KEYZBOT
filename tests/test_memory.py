@@ -1,10 +1,9 @@
 """Test memory module — persistent memory CRUD + search."""
-import sys, os, tempfile, shutil
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 from core import memory
-from pathlib import Path
 
 
 @pytest.fixture(autouse=True)
@@ -46,7 +45,6 @@ def test_list_memories():
     memory.save("mem-a", "Content A")
     memory.save("mem-b", "Content B", scope="team")
     all_mems = memory.list_memories()
-    names = [m["name"] for m in all_mems]
     assert len(all_mems) >= 2
 
 

@@ -1,6 +1,6 @@
 """Linter and test runner tools."""
 
-import os, subprocess, json
+import os, subprocess
 
 # ─── Linter Tool ─────────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 """Notification and messaging tools."""
 
-import subprocess, os, json
+import subprocess, os
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "send_email", "description": "Send an email via SMTP.", "parameters": {"type": "object", "properties": {"to": {"type": "string", "description": "Recipient email"}, "subject": {"type": "string", "description": "Email subject"}, "body": {"type": "string", "description": "Email body"}, "smtp_host": {"type": "string", "description": "SMTP server (default: from env SMTP_HOST)"}, "smtp_port": {"type": "integer", "description": "SMTP port (default: 587)"}, "from_addr": {"type": "string", "description": "From address (default: from env SMTP_FROM)"}}, "required": ["to", "subject", "body"]}}},

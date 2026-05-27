@@ -119,7 +119,7 @@ def execute(name, args, work_dir=None):
                 count = content.count(name_part) - 1
                 if count <= 0:
                     unused.append(mod)
-            return f"Potentially unused imports:\n" + "\n".join(f"  - {u}" for u in unused) if unused else "All imports appear to be used."
+            return "Potentially unused imports:\n" + "\n".join(f"  - {u}" for u in unused) if unused else "All imports appear to be used."
 
         elif name == "complexity_check":
             path = args["path"]
@@ -195,7 +195,7 @@ def execute(name, args, work_dir=None):
                     data = json.load(f)
                 deps = data.get("dependencies", {})
                 dev = data.get("devDependencies", {})
-                lines = [f"[package.json]"]
+                lines = ["[package.json]"]
                 for k, v in deps.items():
                     lines.append(f"  {k}: {v}")
                 if dev:

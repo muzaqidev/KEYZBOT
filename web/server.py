@@ -1,6 +1,6 @@
 """KEYZBOT Web Server — Flask + SocketIO, all features."""
 
-import sys, os, json, time, threading, uuid, signal, subprocess
+import sys, os, time, threading, uuid, signal, subprocess
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -40,7 +40,7 @@ def _git_pull_restart():
             if "requirements.txt" in req_result.stdout:
                 subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt", "-q"],
                                cwd=_REPO_DIR, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
-            print(f"\033[93m[KEYZBOT] Updated! Restarting server...\033[0m")
+            print("\033[93m[KEYZBOT] Updated! Restarting server...\033[0m")
             os.execv(sys.executable, [sys.executable] + sys.argv)
     except Exception:
         pass
@@ -61,8 +61,8 @@ _req.Session.__init__ = _patched_session_init
 ASYNC_MODE = "threading"
 
 from flask import Flask, send_from_directory, jsonify, request
-from flask_socketio import SocketIO, emit, join_room, leave_room
-from core import config, agent, memory, plan, tasks, hooks, skills, scheduler, subagents, permissions
+from flask_socketio import SocketIO, emit, join_room
+from core import config, agent, memory, scheduler, permissions
 from core import web_sessions, rate_limit
 from web.terminal import get_terminal, close_terminal
 from web.commands import handle_command
@@ -269,7 +269,6 @@ def _no_cache(response):
 def index():
     return send_from_directory(app.static_folder, "index.html")
 
-import mimetypes
 @app.route("/media/<path:filepath>")
 def serve_media(filepath):
     """Serve generated media files (audio, images, video)."""
@@ -277,7 +276,6 @@ def serve_media(filepath):
     full_path = os.path.join(media_dir, filepath)
     if not os.path.isfile(full_path):
         return "Not found", 404
-    mime = mimetypes.guess_type(full_path)[0] or "application/octet-stream"
     response = send_from_directory(media_dir, filepath)
     response.headers["Cache-Control"] = "public, max-age=3600"
     return response
@@ -630,21 +628,24 @@ def on_switch_provider(data):
     sid = _get_browser_id()
     user = _get_user(sid)
     cfg = _enrich_config(config.get_active_config())
+    active_bot = None
     for cid, chat in user.get("chats", {}).items():
         chat_bot = chat.get("agent")
         if chat_bot:
             chat_bot.cfg = cfg
+            if cid == user["active_chat"]:
+                active_bot = chat_bot
     # Save API key if provided
     api_key = data.get("api_key", "")
     if api_key:
         config.save_provider_config(provider_id, api_key=api_key)
-        bot.cfg["api_key"] = api_key
+        cfg["api_key"] = api_key
     emit("provider_switched", {
         "provider_id": provider_id,
         "model": cfg.get("model", ""),
         "base_url": cfg.get("base_url", ""),
     })
-    emit("status", make_status(bot))
+    emit("status", make_status(active_bot))
 
 @socketio.on("save_provider")
 def on_save_provider(data):
@@ -731,7 +732,7 @@ def on_update_now():
             _latest_commit = ""
             # Give the client time to receive the event
             import time; time.sleep(1)
-            print(f"\033[93m[KEYZBOT] Updated by user! Restarting server...\033[0m")
+            print("\033[93m[KEYZBOT] Updated by user! Restarting server...\033[0m")
             os.execv(sys.executable, [sys.executable] + sys.argv)
         else:
             emit("update_status", {"status": "error", "message": "Update failed. Try manually."})
@@ -766,7 +767,7 @@ def _update_checker_loop():
 
 
 # ─── Streaming Chat (imported from streaming.py) ─────────────────────────────
-from web.streaming import safe_emit, make_status, exec_tool, stream_chat
+from web.streaming import make_status, stream_chat
 
 
 # ─── Terminal Events (use request.sid — PTY is ephemeral, can't survive refresh) ─
@@ -832,10 +833,10 @@ def start_web(host="0.0.0.0", port=8080, open_browser=True):
 
 
     print()
-    print(f"  \033[96m\033[1mKEYZBOT v10.2 Web Terminal\033[0m")
+    print("  \033[96m\033[1mKEYZBOT v10.2 Web Terminal\033[0m")
     print(f"  \033[90m{'━' * 40}\033[0m")
     print(f"  \033[92m●\033[0m Server running at \033[97m\033[1mhttp://localhost:{port}\033[0m")
-    print(f"  \033[90mPress Ctrl+C to stop\033[0m\n")
+    print("  \033[90mPress Ctrl+C to stop\033[0m\n")
     # Start background update checker
     threading.Thread(target=_update_checker_loop, daemon=True).start()
     # Check once at startup

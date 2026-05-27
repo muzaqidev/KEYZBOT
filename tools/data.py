@@ -1,6 +1,6 @@
 """Database & data processing tools."""
 
-import json, csv, os, sqlite3, io
+import json, csv, sqlite3
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "db_connect", "description": "Connect to a SQLite database. Creates if not exists. Returns connection info.", "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "Path to SQLite database file"}}, "required": ["path"]}}},

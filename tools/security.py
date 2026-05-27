@@ -1,6 +1,6 @@
 """Security scanning and crypto tools."""
 
-import subprocess, os, re, json, hashlib, secrets, base64
+import subprocess, os, re, json, hashlib, secrets
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "secret_scan", "description": "Scan codebase for hardcoded secrets, API keys, passwords, and tokens.", "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "Directory or file to scan"}, "include": {"type": "string", "description": "File glob filter"}}, "required": ["path"]}}},

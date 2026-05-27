@@ -1,10 +1,9 @@
 """Test scheduler module — cron parsing and should_fire."""
-import sys, os, time, json
+import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 from core import scheduler
-from pathlib import Path
 
 
 @pytest.fixture(autouse=True)

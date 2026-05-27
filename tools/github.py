@@ -1,6 +1,6 @@
 """GitHub API integration — PR, issues, remote repo interaction."""
 
-import os, json, subprocess
+import subprocess
 
 def _gh(args_str, work_dir=None):
     """Run gh CLI command and return output."""

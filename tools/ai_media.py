@@ -1,6 +1,6 @@
 """AI media generation tools — TTS, image gen, video gen, audio processing."""
 
-import subprocess, os, json, time, hashlib, base64, uuid
+import subprocess, os, json, uuid
 
 TOOL_DEFS = [
     {"type": "function", "function": {"name": "tts_generate", "description": "Convert text to speech audio file. Returns audio file path for playback.", "parameters": {"type": "object", "properties": {"text": {"type": "string", "description": "Text to convert to speech"}, "voice": {"type": "string", "description": "Voice name (e.g. 'en-US-AriaNeural', 'id-ID-ArdiNeural'). Default: auto-detect language"}, "rate": {"type": "string", "description": "Speech rate (e.g. '+0%', '-20%', '+50%')"}, "output": {"type": "string", "description": "Output audio file path (.mp3)"}}, "required": ["text"]}}},
@@ -61,7 +61,6 @@ def execute(name, args, work_dir=None):
                         cmd += ["--voice", "sv-SE-SofieNeural"]
                     else:
                         # Default to Indonesian or English
-                        id_chars = set("abcdefghijklmnopqrstuvwxyz")
                         words = text.lower().split()
                         id_indicators = {"dan", "yang", "ini", "itu", "adalah", "untuk", "dengan", "pada", "dari", "ke", "di"}
                         if any(w in id_indicators for w in words):
