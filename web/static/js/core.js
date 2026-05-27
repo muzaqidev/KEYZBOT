@@ -155,3 +155,11 @@ function countUp(el, target, duration, suffix) {
 }
 
 window.addEventListener("load", () => input.focus());
+
+// Delegated click handler for media images (prevents XSS via inline onclick)
+document.addEventListener("click", (e) => {
+    const img = e.target.closest("[data-url]");
+    if (img && (img.classList.contains("msg-image-thumb") || img.closest(".image-player"))) {
+        window.open(img.dataset.url, "_blank");
+    }
+});

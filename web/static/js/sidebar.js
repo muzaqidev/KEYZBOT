@@ -18,15 +18,22 @@ function renderSessions(chats) {
     chats.forEach(chat => {
         const item = document.createElement("div");
         item.className = "session-item" + (chat.id === activeChatId ? " active" : "");
+        const safeId = esc(chat.id);
+        const safeName = esc(chat.name);
         item.innerHTML = `
             <span class="session-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-            <span class="session-name">${esc(chat.name)}</span>
+            <span class="session-name">${safeName}</span>
             <span class="session-time">${chat.messages || 0}</span>
             <div class="session-actions">
-                <button class="session-action" onclick="event.stopPropagation(); openRename('${chat.id}', '${esc(chat.name)}')" title="Rename"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="session-action delete" onclick="event.stopPropagation(); deleteChat('${chat.id}')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                <button class="session-action" title="Rename"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <button class="session-action delete" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
             </div>`;
+        // Bind events safely without inline onclick (prevents XSS via chat name)
         item.onclick = () => switchChat(chat.id);
+        const renameBtn = item.querySelector(".session-action:not(.delete)");
+        if (renameBtn) renameBtn.onclick = (e) => { e.stopPropagation(); openRename(chat.id, chat.name); };
+        const deleteBtn = item.querySelector(".session-action.delete");
+        if (deleteBtn) deleteBtn.onclick = (e) => { e.stopPropagation(); deleteChat(chat.id); };
         list.appendChild(item);
     });
 }

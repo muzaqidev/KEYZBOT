@@ -1,10 +1,10 @@
-/* KEYZBOT Web UI v9.0 — Premium Professional Theme */
+/* KEYZBOT Web UI v10.2 — Premium Professional Theme */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root,[data-theme="dark"]{
   --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#2a2a2a;
-  --surface:#1a1a1a;--surface2:#222;
-  --text:#ececec;--text2:#9a9a9a;--text3:#555;
+  --surface:#1a1a1a;--surface2:#222;--card:#1e1e1e;
+  --text:#ececec;--text2:#9a9a9a;--text3:#555;--text-muted:#9a9a9a;--text-dim:#555;
   --border:#2a2a2a;--border2:#3a3a3a;
   --accent:#a78bfa;--accent2:#8b5cf6;--accent3:rgba(167,139,250,.1);
   --accent-glow:rgba(139,92,246,.15);
@@ -23,8 +23,8 @@
 
 [data-theme="light"]{
   --bg:#fafafa;--bg2:#f5f5f5;--bg3:#eee;--bg4:#e0e0e0;
-  --surface:#fff;--surface2:#f8f8f8;
-  --text:#111;--text2:#555;--text3:#999;
+  --surface:#fff;--surface2:#f8f8f8;--card:#f5f5f5;
+  --text:#111;--text2:#555;--text3:#999;--text-muted:#666;--text-dim:#aaa;
   --border:#e5e5e5;--border2:#d4d4d4;
   --accent:#7c3aed;--accent2:#6d28d9;--accent3:rgba(124,58,237,.06);
   --accent-glow:rgba(124,58,237,.1);
@@ -563,7 +563,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .msg-ephemeral .ephemeral-bar{
   position:absolute;bottom:0;left:0;height:2px;
   background:var(--accent);opacity:.5;
-  animation:ephemeral-countdown 60s linear forwards;
+  animation:ephemeral-countdown var(--ephemeral-dur, 60s) linear forwards;
 }
 .msg-ephemeral .ephemeral-close{
   position:absolute;top:8px;right:10px;
@@ -973,7 +973,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   .pcard-btn.use{padding:0 12px;font-size:11px}
   .pcard-badge{padding:3px 8px;font-size:9px}
   .pcard-edit-actions{flex-wrap:wrap}
-  .pmodal-btn{padding:8px 14px;font-size:12px}
   .pcard-edit{padding:0 14px 14px}
   .pcard-edit-grid{gap:8px;padding-top:12px}
   .pmodal-btn{padding:9px 16px;font-size:13px}
@@ -1086,8 +1085,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 }
 @keyframes slideInRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 #update-toast .toast-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-#update-toast .toast-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#update-toast .toast-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:toast-pulse 1.5s infinite}
+@keyframes toast-pulse{0%,100%{opacity:1}50%{opacity:.4}}
 #update-toast .toast-title{font-size:14px;font-weight:700;color:var(--text)}
 #update-toast .toast-body{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.4}
 #update-toast .toast-actions{display:flex;gap:8px}

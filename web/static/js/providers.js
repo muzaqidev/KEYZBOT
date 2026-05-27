@@ -133,7 +133,6 @@ function saveProvider(id) {
     const url = document.getElementById('url-' + id)?.value || '';
     const model = document.getElementById('model-' + id)?.value || '';
     socket.emit("save_provider", {provider_id: id, api_key: key, base_url: url, model: model});
-    socket.emit("switch_provider", {provider_id: id, api_key: key});
 }
 
 function testProvider(id) {

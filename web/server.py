@@ -61,7 +61,7 @@ _req.Session.__init__ = _patched_session_init
 ASYNC_MODE = "threading"
 
 from flask import Flask, send_from_directory, jsonify, request
-from flask_socketio import SocketIO, emit, join_room, leave_room, join_room
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from core import config, agent, memory, plan, tasks, hooks, skills, scheduler, subagents, permissions
 from core import web_sessions, rate_limit
 from web.terminal import get_terminal, close_terminal
@@ -291,7 +291,7 @@ def api_config():
         "max_tokens": cfg.get("max_tokens", 4096),
         "base_url": cfg.get("base_url", ""),
         "work_dir": os.getcwd(),
-        "version": "9.0",
+        "version": "10.2",
         "perm_mode": permissions.get_mode(),
     })
 
@@ -552,7 +552,7 @@ def on_user_message(data):
         return
 
     # Guard: don't allow new message while this chat is already streaming
-    stream_key = (sid, user["active_chat"])
+    stream_key = (_get_browser_id(), user["active_chat"])
     if stream_key in _streaming_chats:
         emit("chat_error", {"error": "Please wait — the current response is still being generated.", "chat_id": user["active_chat"]})
         return
@@ -566,9 +566,9 @@ def on_user_message(data):
 
 @socketio.on("file_upload")
 def on_file_upload(data):
-    sid = request.sid
-    if not rate_limit.check_upload_limit(sid):
-        remaining = rate_limit.get_remaining(sid)
+    bid = _get_browser_id()
+    if not rate_limit.check_upload_limit(bid):
+        remaining = rate_limit.get_remaining(bid)
         emit("upload_result", {"error": f"Rate limit exceeded. {remaining} remaining."})
         return
     filename = data.get("filename", "")
@@ -626,12 +626,14 @@ def on_switch_provider(data):
         emit("provider_error", {"error": "Missing provider_id"})
         return
     config.set_active_provider(provider_id)
-    # Update the active bot's config
+    # Update ALL chat bots' config, not just active
     sid = _get_browser_id()
     user = _get_user(sid)
-    bot = _get_active_bot(sid)
     cfg = _enrich_config(config.get_active_config())
-    bot.cfg = cfg
+    for cid, chat in user.get("chats", {}).items():
+        chat_bot = chat.get("agent")
+        if chat_bot:
+            chat_bot.cfg = cfg
     # Save API key if provided
     api_key = data.get("api_key", "")
     if api_key:
@@ -688,9 +690,9 @@ def on_test_provider(data):
     if not base_url:
         emit("provider_test_result", {"success": False, "error": "Missing base_url"})
         return
-    # Use embedded key for OpenGateway if not provided
+    # Use key from active config if not provided
     if not api_key:
-        api_key = "ogw_live_e00b07a96253577cd3933a5bb9bee292"
+        api_key = config.get_active_config().get("api_key", "")
     if not model:
         model = "mimo-v2.5-pro"
     try:
@@ -805,10 +807,10 @@ def start_web(host="0.0.0.0", port=8080, open_browser=True):
         # Save only chats with actual messages
         for sid, session in _user_sessions.items():
             for cid, chat in session.get("chats", {}).items():
-                agent = chat.get("agent")
-                if agent and len(agent.messages) > 1:  # >1 because system prompt is always there
+                chat_agent = chat.get("agent")
+                if chat_agent and len(chat_agent.messages) > 1:  # >1 because system prompt is always there
                     try:
-                        config.save_history(cid, agent.messages)
+                        config.save_history(cid, chat_agent.messages)
                     except Exception:
                         pass
         print("  \033[92mState saved. Goodbye!\033[0m")
@@ -830,7 +832,7 @@ def start_web(host="0.0.0.0", port=8080, open_browser=True):
 
 
     print()
-    print(f"  \033[96m\033[1mKEYZBOT v9.1 Web Terminal\033[0m")
+    print(f"  \033[96m\033[1mKEYZBOT v10.2 Web Terminal\033[0m")
     print(f"  \033[90m{'━' * 40}\033[0m")
     print(f"  \033[92m●\033[0m Server running at \033[97m\033[1mhttp://localhost:{port}\033[0m")
     print(f"  \033[90mPress Ctrl+C to stop\033[0m\n")

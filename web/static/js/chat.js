@@ -36,7 +36,7 @@ function addUserMessage(text, images) {
     let imgHtml = "";
     if (images && images.length > 0) {
         imgHtml = '<div class="msg-images">' + images.map(src =>
-            `<img src="${src}" class="msg-image-thumb" onclick="window.open('${src}','_blank')">`
+            `<img src="${src}" class="msg-image-thumb" data-url="${esc(src)}">`
         ).join("") + '</div>';
     }
     row.innerHTML = `<div class="msg-bubble"><div class="msg-content">${imgHtml}${esc(text)}</div></div><div class="msg-avatar" style="background:var(--accent2)">U</div>`;
@@ -83,7 +83,9 @@ function addEphemeralMessage(text, duration) {
     if (typeof duration === "undefined") duration = 60000;
     const row = document.createElement("div");
     row.className = "msg-row bot msg-ephemeral";
-    row.innerHTML = `<div class="msg-avatar">K</div><div class="msg-bubble"><div class="msg-content cmd-result">${renderMarkdown(text)}</div><div class="ephemeral-bar"></div><button class="ephemeral-close" onclick="dismissEphemeral(this)">&times;</button></div>`;
+    row.style.setProperty("--ephemeral-dur", (duration / 1000) + "s");
+    row.innerHTML = `<div class="msg-avatar">K</div><div class="msg-bubble"><div class="msg-content cmd-result">${renderMarkdown(text)}</div><div class="ephemeral-bar"></div><button class="ephemeral-close">&times;</button></div>`;
+    row.querySelector(".ephemeral-close").onclick = function() { dismissEphemeral(this); };
     messagesEl.appendChild(row);
     highlightCode(row);
     addCopyButtons(row);
@@ -289,10 +291,12 @@ function renderDiff(text) {
     const lines = text.split('\n');
     const blocks = [];
     let current = null;
-    for (const line of lines) {
-        if (line.startsWith('--- ') && lines[lines.indexOf(line) + 1]?.startsWith('+++ ')) {
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith('--- ') && i + 1 < lines.length && lines[i + 1].startsWith('+++ ')) {
             if (current) blocks.push(current);
-            current = { header: line + '\n' + lines[lines.indexOf(line) + 1], hunks: [], currentHunk: null };
+            current = { header: line + '\n' + lines[i + 1], hunks: [], currentHunk: null };
+            i++; // skip the +++ line
             continue;
         }
         if (!current) continue;

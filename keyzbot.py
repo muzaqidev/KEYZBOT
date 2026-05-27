@@ -63,7 +63,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from core import config, ui, agent, memory, plan, tasks, hooks, skills, scheduler, subagents, permissions
 from core.config import save_history, load_history, list_history
 
-VERSION = "10.0"
+VERSION = "10.2"
 
 # ─── Commands ─────────────────────────────────────────────────────────────────
 def cmd_help():
@@ -161,7 +161,10 @@ def cmd_tools():
         f"{ui.S.BBLU}github{ui.S.R}      GitHub PR/issue/repo ops",
         f"{ui.S.BBLU}read_document{ui.S.R} Read PDF/DOCX files",
     ]
-    ui.cmd_box(f"Available Tools (33 total)", tools_list)
+    # Count actual tools dynamically
+    from core.tools import get_all_tool_names
+    tool_count = len(get_all_tool_names())
+    ui.cmd_box(f"Available Tools ({tool_count} total)", tools_list)
 
 # ─── Command Handlers ─────────────────────────────────────────────────────────
 def handle_memory_cmd(cmd, arg):

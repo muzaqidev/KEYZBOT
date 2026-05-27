@@ -4,7 +4,7 @@ import os
 from core import config, memory, plan, tasks, hooks, skills, scheduler, subagents, permissions
 
 
-HELP = ("**KEYZBOT v9.2 Commands**\n\n"
+HELP = ("**KEYZBOT v10.2 Commands**\n\n"
         "**General:** /help /clear /model /temp /tokens /config /system /tools /cd /pwd /setdir /reset /fast /compact\n\n"
         "**Browse:** /browse [path] — show directory tree\n\n"
         "**Memory:** /remember /recall /forget\n\n"
@@ -82,12 +82,30 @@ def handle_command(sid, bot, text):
             return "Config reset."
         return "Type `/reset confirm`"
     elif cmd == "/fast":
-        return "Fast mode toggled."
+        if bot.cfg.get("temperature", 0.7) > 0.3:
+            bot.cfg["temperature"] = 0.1
+            return "Fast mode ON (temperature: 0.1)"
+        else:
+            bot.cfg["temperature"] = 0.7
+            return "Fast mode OFF (temperature: 0.7)"
     elif cmd == "/compact":
-        if len(bot.messages) > 4:
+        if len(bot.messages) > 6:
             removed = len(bot.messages) - 5
-            bot.messages = [bot.messages[0]] + bot.messages[-4:]
-            return f"Compacted: removed {removed} messages"
+            # Generate summary of removed messages
+            summary_parts = []
+            for m in bot.messages[1:-4]:
+                role = m.get("role", "")
+                content = m.get("content", "") or ""
+                if role == "tool":
+                    summary_parts.append(f"[tool]: {str(content)[:100]}")
+                elif m.get("tool_calls"):
+                    names = [tc["function"]["name"] for tc in m["tool_calls"]]
+                    summary_parts.append(f"[calls]: {', '.join(names)}")
+                elif content:
+                    summary_parts.append(f"[{role}]: {str(content)[:150]}")
+            summary = "[Context compacted]\n" + "\n".join(summary_parts[-15:])
+            bot.messages = [bot.messages[0], {"role": "system", "content": summary}] + bot.messages[-4:]
+            return f"Compacted: removed {removed} messages, summary generated"
         return "Already compact."
     elif cmd == "/remember":
         if not arg:

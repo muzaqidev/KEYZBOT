@@ -380,6 +380,11 @@ class Agent:
         ui.user_msg(user_input)
 
         max_rounds = self.cfg.get("max_rounds", 25)
+        # Count input tokens before API calls
+        try:
+            in_toks = _count_msg_tokens(self.messages)
+        except Exception:
+            in_toks = 0
         for round_num in range(max_rounds):
             if round_num > 0:
                 self._auto_compress()
@@ -548,7 +553,7 @@ class Agent:
                 if full_text:
                     self.messages.append(assistant_msg)
                     output_toks = _count_tokens(full_text)
-                    self._update_cost(0, output_toks)
+                    self._update_cost(in_toks, output_toks)
                 return full_text
 
         print(f"\n  {ui.S.BYLW}Max tool rounds ({max_rounds}) reached.{ui.S.R}")

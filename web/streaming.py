@@ -170,6 +170,13 @@ def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
     if bot.tools:
         body["tools"] = bot.tools
 
+    # Count input tokens from all messages before API calls
+    try:
+        from tools.tokenizer import count_messages_tokens as _count_msg
+        in_toks = _count_msg(bot.messages)
+    except Exception:
+        in_toks = 0
+
     for _round in range(bot.cfg.get("max_rounds", 25)):
         if _round > 0:
             bot._auto_compress()
@@ -284,7 +291,7 @@ def _stream_chat_inner(sid, bot, user_input, chat_id="", images=None,
                 out_toks = _tk_count(full_text)
             except Exception:
                 out_toks = len(full_text) // 4
-            bot._update_cost(0, out_toks)
+            bot._update_cost(in_toks, out_toks)
         _emit("chat_done", {"text": full_text, "tokens": bot.tokens, "cost": round(bot.cost, 4), "chat_id": chat_id}, room=browser_id)
         _emit("status", make_status(bot), room=browser_id)
         if user_sessions and browser_id in user_sessions:

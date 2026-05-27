@@ -235,7 +235,7 @@ socket.on("media_result", (data) => {
         '</div>';
     } else if (m.type === "image") {
         inner = '<div class="media-player image-player">' +
-            '<img src="' + m.url + '" alt="' + (m.prompt || m.kind || 'image') + '" loading="lazy" onclick="window.open(\'' + m.url + '\',\'_blank\')">' +
+            '<img src="' + m.url + '" alt="' + esc(m.prompt || m.kind || 'image') + '" loading="lazy" data-url="' + esc(m.url) + '">' +
             '<a class="media-download" href="' + m.url + '" download="' + m.filename + '">Download</a>' +
         '</div>';
     } else if (m.type === "video" || m.type === "gif") {
@@ -275,6 +275,7 @@ socket.on("chat_error", (data) => {
     removeThinking(); addError(data.error);
     isStreaming = false;
     hadStream = false;
+    _suppressThinking = false;
     sendBtn.disabled = !input.value.trim();
     scrollBottom();
 });

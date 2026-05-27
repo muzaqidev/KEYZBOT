@@ -66,7 +66,7 @@ def test_execute_edit_file(tmp_path):
     with open(test_file) as f:
         assert "new content" in f.read()
 
-def test_execute_list_dir():
+def test_execute_list_dir_content():
     """Test that list_dir returns content."""
     result = tools.execute("list_dir", {"path": os.path.dirname(os.path.dirname(os.path.abspath(__file__)))})
     assert isinstance(result, str) and len(result) > 0
